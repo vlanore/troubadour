@@ -1,0 +1,43 @@
+body {
+    background: rgb(14, 29, 44);
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    /* border-radius: 10px; */
+    background: rgb(21, 45, 68);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(17, 36, 55);
+}
+
+a {
+    color: orange;
+}
+
+#main {
+    width: 800px;
+    height: 80vh;
+    overflow-y: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: large;
+    background-color: rgb(24, 50, 78);
+    color: aliceblue;
+    scrollbar-color: rgb(17, 36, 55) rgb(21, 45, 68);
+}
+
+#click {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

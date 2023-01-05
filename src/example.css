@@ -1,5 +1,5 @@
 body {
-    background: rgb(14, 29, 44);
+    background: rgb(14 29 44);
 }
 
 /* width */
@@ -10,12 +10,12 @@ body {
 /* Track */
 ::-webkit-scrollbar-track {
     /* border-radius: 10px; */
-    background: rgb(21, 45, 68);
+    background: rgb(20 38 55);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: rgb(17, 36, 55);
+    background: rgb(16 34 52);
 }
 
 a {
@@ -31,9 +31,9 @@ a {
     padding: 15px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: large;
-    background-color: rgb(24, 50, 78);
-    color: aliceblue;
-    scrollbar-color: rgb(17, 36, 55) rgb(21, 45, 68);
+    background-color: rgb(20 40 62);
+    color: rgb(185 197 198);
+    scrollbar-color: rgb(17 36 55) rgb(21 45 68);
 }
 
 #click {

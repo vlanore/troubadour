@@ -20,7 +20,7 @@ display(
     f"""# Markdown test
     
 This is a test[^1] of the **markdown capabilities** of the thing.
-Please disregard actual content.
+Please disregard actual //red:content/?.
 
 [^1]: footnote content
 """

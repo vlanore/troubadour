@@ -10,6 +10,21 @@
 <body>
     <div id="main"></div>
     <button id="click">Click</button>
+
+
+    <!-- Tippy stuff -->
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+    <script>
+        // import 'tippy.js/themes/translucent.css';
+        tippy('#click', {
+            content: 'My <b>tooltip</b><br>is the best!',
+            theme: 'translucent',
+            allowHTML: true,
+        });
+    </script>
+
+    <!-- main script -->
     <py-config>
         packages = ["jsonpickle", "mistune"]
     </py-config>

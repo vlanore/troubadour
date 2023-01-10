@@ -1,48 +1,58 @@
-body {
-    background: rgb(14 29 44);
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+html {
+    color-scheme: dark;
 }
 
-/* width */
-::-webkit-scrollbar {
-    width: 20px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    /* border-radius: 10px; */
-    background: rgb(20 38 55);
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: rgb(16 34 52);
-}
-
-a {
-    color: orange;
-}
-
-#main {
-    width: 800px;
-    height: 80vh;
-    overflow-y: auto;
+#main-container {
     margin-left: auto;
     margin-right: auto;
-    padding: 15px;
-    font-size: large;
-    background-color: rgb(20 40 62);
-    color: rgb(227, 232, 233);
-    scrollbar-color: rgb(17 36 55) rgb(21 45 68);
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: center;
+    height: 100vh;
+    gap: 10px;
+    padding: 10px;
 }
+
+#portrait {
+    border: 1px solid red;
+    aspect-ratio: 3/4;
+    width: 250px;
+}
+
+#info {
+    border: 1px solid green;
+    width: 250px;
+    flex: 1 0 auto;
+}
+
+#story-container {
+    /* color-scheme: dark; */
+    font-size: large;
+    border: 1px solid purple;
+    max-width: 650px;
+    flex: 1 0 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: hidden;
+}
+
+#story {
+    flex: 1 0;
+    overflow: auto;
+    border: 1px solid yellow;
+}
+
+#extra {
+    border: 1px solid orange;
+    width: 250px;
+    flex: 1 0 auto;
+}
+
 
 #click {
     display: block;
     margin-left: auto;
     margin-right: auto;
-}
-
-.tippy-box {
-    font-size: large;
-    padding: 5px;
 }

@@ -1,28 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="dark">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="example.css">
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
 
 <body>
-    <div id="main"></div>
-    <button id="click">Click</button>
 
+    <div id="main-container">
 
-    <!-- Tippy stuff -->
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="https://unpkg.com/tippy.js@6"></script>
-    <script>
-        // import 'tippy.js/themes/translucent.css';
-        tippy('#click', {
-            content: 'My <b>tooltip</b><br>is the best!',
-            theme: 'translucent',
-            allowHTML: true,
-        });
-    </script>
+        <div id="portrait">
+            papa
+        </div>
+
+        <div id="info">
+            poupou
+        </div>
+
+        <div id="story-container">
+            <div id="story"></div>
+            <button type="button" class="btn btn-primary btn-lg" id="click">Click</button>
+        </div>
+
+        <div id="extra">
+            yapou
+        </div>
+
+    </div>
+
+    <!-- Bootstrap stuff -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
 
     <!-- main script -->
     <py-config>

@@ -11,16 +11,16 @@ from pyscript import display as psdisplay  # type: ignore
 
 
 def display(txt: str) -> None:
-    psdisplay(HTML(mistune.html(txt)), target="main")
-    tgt = Element("main").element
+    psdisplay(HTML(mistune.html(txt)), target="story")
+    tgt = Element("story").element
     tgt.scrollTop = tgt.scrollHeight
 
 
 display(
     f"""# Markdown test
-    
+
 This is a test[^1] of the **markdown capabilities** of the thing.
-Please disregard actual //red:content/?.
+Please disregard actual /red:content/?.
 
 [^1]: footnote content
 """

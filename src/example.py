@@ -1,17 +1,19 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Generator
 
 import jsonpickle as jsp
 import mistune
 from pyodide.ffi import create_proxy  # type: ignore
-from pyscript import Element  # type: ignore
 from pyscript import HTML  # type: ignore
+from pyscript import Element  # type: ignore
 from pyscript import js  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
 
 
 def display(txt: str) -> None:
-    psdisplay(HTML('<div class="divider">New page</div>'), target="story")
+    t = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    psdisplay(HTML(f'<div class="divider">{t}</div>'), target="story")
     psdisplay(HTML(mistune.html(txt)), target="story")
     tgt = Element("story").element
     tgt.scrollTop = tgt.scrollHeight

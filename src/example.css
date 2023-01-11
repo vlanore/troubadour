@@ -30,7 +30,7 @@ html {
 }
 
 #story-container {
-    font-size: large;
+    /* font-size: large; */
     max-width: 650px;
     flex: 1 0 100%;
     display: flex;

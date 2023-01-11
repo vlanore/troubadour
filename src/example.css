@@ -1,7 +1,3 @@
-html {
-    color-scheme: dark;
-}
-
 #main-container {
     margin-left: auto;
     margin-right: auto;
@@ -11,41 +7,58 @@ html {
     align-items: stretch;
     align-content: center;
     height: 100vh;
-    gap: 10px;
-    padding: 10px;
+    gap: 15px 5vw;
+    padding: 15px;
 }
 
 #portrait {
-    border: 1px solid red;
     aspect-ratio: 3/4;
     width: 250px;
+    margin-bottom: 0;
+    background-image: url("https://preview.redd.it/heh2tofihpn01.jpg?auto=webp&s=022ec5d0941da6747e2fe9f9d0c1853a334ef362");
+    background-size: cover;
 }
 
 #info {
-    border: 1px solid green;
     width: 250px;
     flex: 1 0 auto;
+    margin-bottom: 0;
 }
 
 #story-container {
-    /* color-scheme: dark; */
     font-size: large;
-    border: 1px solid purple;
     max-width: 650px;
     flex: 1 0 100%;
     display: flex;
     flex-flow: column nowrap;
     overflow: hidden;
+    padding-right: 0;
 }
 
 #story {
     flex: 1 0;
-    overflow: auto;
-    border: 1px solid yellow;
+    overflow-y: scroll;
+}
+
+#story::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+#story::-webkit-scrollbar-track {
+    background: white;
+}
+
+#story::-webkit-scrollbar-thumb {
+    background: #ddd;
+    visibility: hidden;
+}
+
+#story:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
 }
 
 #extra {
-    border: 1px solid orange;
     width: 250px;
     flex: 1 0 auto;
 }

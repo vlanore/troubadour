@@ -11,6 +11,7 @@ from pyscript import display as psdisplay  # type: ignore
 
 
 def display(txt: str) -> None:
+    psdisplay(HTML('<div class="divider">New page</div>'), target="story")
     psdisplay(HTML(mistune.html(txt)), target="story")
     tgt = Element("story").element
     tgt.scrollTop = tgt.scrollHeight
@@ -21,6 +22,10 @@ display(
 
 This is a test[^1] of the **markdown capabilities** of the thing.
 Please disregard actual /red:content/?.
+
+---
+
+More things to say
 
 [^1]: footnote content
 """

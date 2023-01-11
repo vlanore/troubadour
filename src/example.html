@@ -7,11 +7,17 @@
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/themes/translucent.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-divider@1.1.0/dist/bulma-divider.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="example.css">
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
 
 <body>
+
 
     <div id="main-container">
 
@@ -19,11 +25,23 @@
 
         <div id="info" class="card is-primary">
             <header class="card-header">
-                <p class="card-header-title">Info</p>
+                <p class="card-header-title">
+                    <span class="icon-text has-text-info">
+                        <span class="icon">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                        <span>Info</span>
+                    </span>
+                </p>
+                <button class="card-header-icon">
+
+                </button>
             </header>
-            <p class="card-content">
-                poupou
-            </p>
+            <div class="card-content">
+                <p>apples: <b>3</b></p>
+                <p>tokens: <b>31</b></p>
+                <p>coins: <b>1.2</b></p>
+            </div>
         </div>
 
         <div id="story-container">
@@ -33,7 +51,14 @@
 
         <div id="extra" class="card is-primary">
             <header class="card-header">
-                <p class="card-header-title">Extra</p>
+                <p class="card-header-title">
+                    <span class="icon-text has-text-primary">
+                        <span class="icon">
+                            <i class="fas fa-star"></i>
+                        </span>
+                        <span>Extra</span>
+                    </span>
+                </p>
             </header>
             <p class="card-content">
                 yapou

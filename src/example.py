@@ -22,14 +22,13 @@ def display(txt: str) -> None:
 display(
     f"""# Markdown test
 
-This is a test[^1] of the **markdown capabilities** of the thing.
-Please disregard actual /red:content/?.
+This is a test of the **markdown capabilities** of the thing.
+Please disregard actual content.
 
----
+## Information
 
-More things to say
-
-[^1]: footnote content
+This is a test. Or is it? What happens if it isn't? Who could have predicted this
+situation? Are we |?red:doomed|?
 """
 )
 

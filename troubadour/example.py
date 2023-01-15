@@ -11,9 +11,17 @@ from pyscript import js  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
 
 from troubadour.pyscript_impl import Story
+from troubadour.troubadown import troubadownify
 
 
 s = Story()
+
+troubadownify("Hello world, I'm a |rabbit| of life")
+troubadownify("Hello world, I'm a |1?rabbit| of life")
+troubadownify("Hello world, I'm a |?rabbit| of life")
+troubadownify("Hello world, I'm a |red:rabbit of life|")
+troubadownify("Hello world, I'm a |1?red:rabbit| of life")
+troubadownify("Hello world, I'm a |1?red:rabbit| of life and |?blue:death|!")
 
 
 s.display(

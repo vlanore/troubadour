@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 import mistune
 from pyscript import HTML  # type: ignore
@@ -27,7 +27,10 @@ class Story(AbstractStory):
         self, text: str, markdown: bool = True, tooltips: Optional[list[str]] = None
     ) -> None:
         self.history.insert(0, text)
-        psdisplay(HTML(mistune.html(text)), target="story")
+        if markdown:
+            psdisplay(HTML(mistune.html(text)), target="story")
+        else:
+            psdisplay(text, target="story")
         self._scroll_to_bottom()
 
     def newpage(self) -> None:

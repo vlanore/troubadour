@@ -1,35 +1,40 @@
+from abc import abstractmethod
 from typing import Optional, Protocol
-from dataclasses import dataclass
 
 
-class Story(Protocol):
+class AbstractStory(Protocol):
+    @abstractmethod
     def display(
         self, text: str, markdown: bool = True, tooltips: Optional[list[str]] = None
     ) -> None:
-        raise NotImplementedError()
+        pass
 
+    @abstractmethod
     def newpage(self) -> None:
-        raise NotImplementedError()
+        pass
 
 
-class InfoPanel(Protocol):
+class AbstractInfoPanel(Protocol):
     def get_title(self) -> str:
-        raise NotImplementedError()
+        return ""
 
+    @abstractmethod
     def get_text(self, markdown: bool = True) -> str:
-        raise NotImplementedError()
+        pass
 
 
-class ImagePanel(Protocol):
+class AbstractImagePanel(Protocol):
+    @abstractmethod
     def get_url(self) -> str:
-        raise NotImplementedError()
+        pass
 
+    @abstractmethod
     def get_alt(self) -> str:
-        raise NotImplementedError()
+        pass
 
 
-class Game(Protocol):
-    story: Story
-    info: InfoPanel
-    extra: InfoPanel
-    porthole: ImagePanel
+class AbstractGame(Protocol):
+    story: AbstractStory
+    info: AbstractInfoPanel
+    extra: AbstractInfoPanel
+    porthole: AbstractImagePanel

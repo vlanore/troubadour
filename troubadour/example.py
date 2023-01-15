@@ -10,16 +10,13 @@ from pyscript import Element  # type: ignore
 from pyscript import js  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
 
-
-def display(txt: str) -> None:
-    t = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    psdisplay(HTML(f'<div class="divider">{t}</div>'), target="story")
-    psdisplay(HTML(mistune.html(txt)), target="story")
-    tgt = Element("story").element
-    tgt.scrollTop = tgt.scrollHeight
+from troubadour.pyscript_impl import Story
 
 
-display(
+s = Story()
+
+
+s.display(
     f"""# Markdown test
 
 This is a test of the **markdown capabilities** of the thing.
@@ -33,32 +30,9 @@ situation? Are we |?red:doomed|?
 )
 
 
-@dataclass
-class State:
-    i: int = 0
-
-
-def main(s: State) -> Generator:
-    while True:
-        display(f"A ({s.i})")
-        yield
-        display(f"B ({s.i})")
-        yield
-        display(f"C ({s.i})")
-        yield
-        display(f"D ({s.i})")
-        yield
-
-
-STATE = State()
-MAIN = main(STATE)
-
-
 def pouic(_: Any) -> None:
-    STATE.i += 1
-    next(MAIN)
-    # js.console.log(jsp.encode(STATE))
-    js.localStorage.setItem("state", jsp.encode(STATE))
+    s.newpage()
+    s.display("Hello")
 
 
 Element("click").element.addEventListener("click", create_proxy(pouic))

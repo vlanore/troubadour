@@ -114,6 +114,10 @@
     <!-- main script -->
     <py-config>
         packages = ["jsonpickle", "mistune"]
+
+        [[fetch]]
+        from = ".."
+        files = ["troubadour/pyscript_impl.py", "troubadour/interfaces.py"]
     </py-config>
     <py-script src="../troubadour/example.py" />
 

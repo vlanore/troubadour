@@ -5,7 +5,11 @@ from typing import Optional, Protocol
 class AbstractStory(Protocol):
     @abstractmethod
     def display(
-        self, text: str, markdown: bool = True, tooltips: Optional[list[str]] = None
+        self,
+        text: str,
+        markdown: bool = True,
+        tooltips: Optional[list[str]] = None,
+        named_tooltips: Optional[dict[str, str]] = None,
     ) -> None:
         pass
 

@@ -1,11 +1,16 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
+from types import SimpleNamespace
 
 import mistune
+from pyodide.ffi import to_js  # type: ignore
+from pyodide.code import run_js  # type: ignore
 from pyscript import HTML  # type: ignore
 from pyscript import Element  # type: ignore
+from pyscript import js  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
+from js import tippy  # type: ignore
 
 from troubadour.interfaces import (
     AbstractGame,
@@ -13,6 +18,7 @@ from troubadour.interfaces import (
     AbstractInfoPanel,
     AbstractStory,
 )
+from troubadour.troubadown import troubadownify
 
 
 @dataclass
@@ -24,13 +30,37 @@ class Story(AbstractStory):
         tgt.scrollTop = tgt.scrollHeight
 
     def display(
-        self, text: str, markdown: bool = True, tooltips: Optional[list[str]] = None
+        self,
+        text: str,
+        markdown: bool = True,
+        tooltips: Optional[list[str]] = None,
+        named_tooltips: Optional[dict[str, str]] = None,
     ) -> None:
         self.history.insert(0, text)
+
+        html, _ = troubadownify(text)
+
         if markdown:
-            psdisplay(HTML(mistune.html(text)), target="story")
+            psdisplay(HTML(mistune.html(html)), target="story")
         else:
-            psdisplay(text, target="story")
+            psdisplay(HTML(html), target="story")
+
+        class TOTO:
+            def __init__(self) -> None:
+                self.content = "Yolo"
+
+        if tooltips is not None:
+            i = 0
+            for tt in tooltips:
+                run_js(
+                    (
+                        f'tippy("#troubadour_tooltip__{i}", {{content:"{tt}",'
+                        " allowHTML:true});"
+                    )
+                )
+
+                i += 1
+
         self._scroll_to_bottom()
 
     def newpage(self) -> None:

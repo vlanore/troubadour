@@ -76,6 +76,11 @@ html {
     margin-right: auto;
 }
 
+.tooltip {
+    text-decoration: underline dotted 1.5px;
+    text-underline-offset: 4px;
+}
+
 .red {
     color: red;
 }

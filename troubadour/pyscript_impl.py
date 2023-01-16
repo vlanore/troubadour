@@ -53,10 +53,26 @@ class Story(AbstractStory):
             i = 0
             for tt in tooltips:
                 run_js(
-                    (
-                        f'tippy("#troubadour_tooltip__{i}", {{content:"{tt}",'
-                        " allowHTML:true});"
-                    )
+                    f"""tippy("#troubadour_tooltip__{i}",
+                            {{
+                                content:"{tt}",
+                                allowHTML:true,
+                            }}
+                        );"""
+                )
+
+                i += 1
+
+        if named_tooltips is not None:
+            i = 0
+            for name, tt in named_tooltips.items():
+                run_js(
+                    f"""tippy("#troubadour_tooltip_{name}",
+                            {{
+                                content:"{tt}",
+                                allowHTML:true,
+                            }}
+                        );"""
                 )
 
                 i += 1

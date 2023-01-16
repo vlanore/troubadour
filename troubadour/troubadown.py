@@ -25,10 +25,12 @@ def troubadownify(input: str) -> tuple[str, list[str]]:
     tooltips = []
     for match in re.finditer(whole_re, input):
         groupdict = match.groupdict()
-        output += input[cursor : match.start()] + "<span "
+        output += input[cursor : match.start()] + '<span class="tooltip'
 
         if groupdict["cls"]:
-            output += match.expand(r' class="\g<cls>"')
+            output += match.expand(r" \g<cls>")
+
+        output += '"'
 
         match groupdict["tt"]:
             case "":

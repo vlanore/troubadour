@@ -12,7 +12,7 @@ s.display(
     f"""# Markdown test
 
 This is a test of the **markdown capabilities** of the thing.
-Please disregard actual content.
+Please disregard |lapin?actual content|.
 
 ## Information
 
@@ -20,6 +20,7 @@ This is a test. Or is it? What happens if it isn't? Who could have predicted thi
 situation? Are we |?red:doomed|?
 """,
     tooltips=["I'm a <b>tooltip</b>"],
+    named_tooltips={"lapin": "Je suis une tooltip"},
 )
 
 

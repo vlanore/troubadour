@@ -17,6 +17,10 @@ class AbstractStory(Protocol):
     def newpage(self) -> None:
         pass
 
+    @abstractmethod
+    def image(self, url: str, alt: str) -> None:
+        pass
+
 
 class AbstractInfoPanel(Protocol):
     def get_title(self) -> str:

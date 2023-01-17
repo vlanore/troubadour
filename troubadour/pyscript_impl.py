@@ -84,6 +84,23 @@ class Story(AbstractStory):
         psdisplay(HTML(f'<div class="divider">{t}</div>'), target="story")
         self._scroll_to_bottom()
 
+    def image(self, url: str, alt: str) -> None:
+        # TODO: add to history!
+        psdisplay(
+            HTML(
+                f"""
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image">
+                    <img src="{url}" alt="{alt}">
+                    </figure>
+                </div>
+            </div>
+            """
+            ),
+            target="story",
+        )
+
 
 if __name__ == "__main__":
     s = Story()

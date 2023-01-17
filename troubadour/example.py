@@ -23,6 +23,8 @@ situation? Are we |?red:doomed|?
     named_tooltips={"lapin": "Je suis une tooltip"},
 )
 
+s.image("https://picsum.photos/800/200", "image")
+
 
 def pouic(_: Any) -> None:
     s.newpage()

@@ -45,6 +45,19 @@ html {
     padding: 10px;
 }
 
+#story .card figure {
+    margin: 0;
+}
+
+#story .card figure img {
+    display: block;
+}
+
+#story .card {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
 #story::-webkit-scrollbar {
     width: 10px;
     height: 10px;

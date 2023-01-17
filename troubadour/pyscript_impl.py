@@ -4,13 +4,10 @@ from typing import Optional
 from types import SimpleNamespace
 
 import mistune
-from pyodide.ffi import to_js  # type: ignore
 from pyodide.code import run_js  # type: ignore
 from pyscript import HTML  # type: ignore
 from pyscript import Element  # type: ignore
-from pyscript import js  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
-from js import tippy  # type: ignore
 
 from troubadour.interfaces import (
     AbstractGame,
@@ -19,6 +16,35 @@ from troubadour.interfaces import (
     AbstractStory,
 )
 from troubadour.troubadown import troubadownify
+
+
+class InfoPanel(AbstractInfoPanel):
+    def __init__(self) -> None:
+        self.title: Optional[str] = None
+        self.text = ""
+
+    def set_title(self, text: str) -> None:
+        self.title = text
+
+    def get_title(self) -> Optional[str]:
+        return self.title
+
+    def set_text(self, text: str, markdown: bool = True) -> None:
+        self.text = text
+        self.markdown = markdown
+
+    def get_text(self) -> tuple[str, bool]:
+        return self.text, self.markdown
+
+
+def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
+    extra_raw, extra_md = extra.get_text()
+    extra_html = mistune.html(extra_raw) if extra_md else extra_raw
+    Element("extra-content").element.innerHTML = extra_html
+
+    info_raw, info_md = info.get_text()
+    info_html = mistune.html(info_raw) if info_md else info_raw
+    Element("info-content").element.innerHTML = info_html
 
 
 @dataclass
@@ -104,3 +130,4 @@ class Story(AbstractStory):
 
 if __name__ == "__main__":
     s = Story()
+    i = InfoPanel()

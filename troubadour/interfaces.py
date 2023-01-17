@@ -23,11 +23,11 @@ class AbstractStory(Protocol):
 
 
 class AbstractInfoPanel(Protocol):
-    def get_title(self) -> str:
+    def get_title(self) -> Optional[str]:
         return ""
 
     @abstractmethod
-    def get_text(self, markdown: bool = True) -> str:
+    def get_text(self) -> tuple[str, bool]:
         pass
 
 

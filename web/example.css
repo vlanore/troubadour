@@ -128,3 +128,14 @@ strong,
 .has-background-dark .has-text-link:focus {
     color: hsl(218, 45%, 65%) !important;
 }
+
+.has-background-dark button {
+    background-color: hsl(0, 0%, 21%);
+    color: hsl(0, 0%, 96%);
+    border-color: hsl(0, 0%, 18%);
+}
+
+.has-background-dark button:hover,
+.has-background-dark button:focus {
+    color: hsl(0, 0%, 96%);
+}

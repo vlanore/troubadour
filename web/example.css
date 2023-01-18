@@ -51,6 +51,8 @@ html {
 
 #story .card figure img {
     display: block;
+    border-bottom-right-radius: 0.4em;
+    border-bottom-left-radius: 0.4em;
 }
 
 #story .card {
@@ -98,44 +100,7 @@ html {
     color: red;
 }
 
-.content h1,
-.content h2,
-.content h3,
-.content h4,
-strong,
-.card-header-title {
-    color: inherit;
-}
-
-.has-background-dark .card-footer-item:not(:last-child) {
-    border-right: 1px solid hsl(0, 0%, 18%);
-}
-
-.has-background-dark .card-footer {
-    border-top: 1px solid hsl(0, 0%, 18%);
-}
-
-.has-background-dark .divider:after,
-.has-background-dark .divider:before {
-    background-color: #595959;
-}
-
-.has-background-dark .has-text-link {
-    color: hsl(219, 70%, 96%) !important;
-}
-
-.has-background-dark .has-text-link:hover,
-.has-background-dark .has-text-link:focus {
-    color: hsl(218, 45%, 65%) !important;
-}
-
-.has-background-dark button {
-    background-color: hsl(0, 0%, 21%);
-    color: hsl(0, 0%, 96%);
-    border-color: hsl(0, 0%, 18%);
-}
-
-.has-background-dark button:hover,
-.has-background-dark button:focus {
-    color: hsl(0, 0%, 96%);
+.dark-mode .divider::before,
+.dark-mode .divider::after {
+    background-color: rgb(57, 57, 57);
 }

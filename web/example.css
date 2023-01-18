@@ -97,3 +97,34 @@ html {
 .red {
     color: red;
 }
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+strong,
+.card-header-title {
+    color: inherit;
+}
+
+.has-background-dark .card-footer-item:not(:last-child) {
+    border-right: 1px solid hsl(0, 0%, 18%);
+}
+
+.has-background-dark .card-footer {
+    border-top: 1px solid hsl(0, 0%, 18%);
+}
+
+.has-background-dark .divider:after,
+.has-background-dark .divider:before {
+    background-color: #595959;
+}
+
+.has-background-dark .has-text-link {
+    color: hsl(219, 70%, 96%) !important;
+}
+
+.has-background-dark .has-text-link:hover,
+.has-background-dark .has-text-link:focus {
+    color: hsl(218, 45%, 65%) !important;
+}

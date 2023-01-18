@@ -11,6 +11,7 @@ s.display(
     f"""# Markdown test
 
 This is a test of the **markdown capabilities** of the thing.
+
 Please disregard |lapin?actual content|.
 
 ## Information
@@ -40,3 +41,37 @@ def pouic(_: Any) -> None:
 
 
 Element("click").element.addEventListener("click", create_proxy(pouic))
+
+
+mode = "light"
+
+
+def toggle_mode(_: Any) -> None:
+    global mode
+    if mode == "dark":
+        Element("main-container").remove_class("has-text-light")
+        Element("main-container").remove_class("has-background-dark")
+        Element("info").remove_class("has-text-light")
+        Element("info").remove_class("has-background-dark")
+        Element("extra").remove_class("has-text-light")
+        Element("extra").remove_class("has-background-dark")
+        Element("menu").remove_class("has-text-light")
+        Element("menu").remove_class("has-background-dark")
+        mode = "light"
+        Element("dark-mode-icon").remove_class("fa-sun")
+        Element("dark-mode-icon").add_class("fa-moon")
+    elif mode == "light":
+        Element("main-container").add_class("has-text-light")
+        Element("main-container").add_class("has-background-dark")
+        Element("info").add_class("has-text-light")
+        Element("info").add_class("has-background-dark")
+        Element("extra").add_class("has-text-light")
+        Element("extra").add_class("has-background-dark")
+        Element("menu").add_class("has-text-light")
+        Element("menu").add_class("has-background-dark")
+        mode = "dark"
+        Element("dark-mode-icon").remove_class("fa-moon")
+        Element("dark-mode-icon").add_class("fa-sun")
+
+
+Element("dark-mode-toggle").element.addEventListener("click", create_proxy(toggle_mode))

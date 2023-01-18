@@ -47,6 +47,17 @@ def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
     Element("info-content").element.innerHTML = info_html
 
 
+def render_tooltip(id: str, text: str) -> None:
+    run_js(
+        f"""tippy("#troubadour_tooltip_{id}",
+                {{
+                    content:"{text}",
+                    allowHTML:true,
+                }}
+            );"""
+    )
+
+
 @dataclass
 class Story(AbstractStory):
     history: list[str] = field(default_factory=list)
@@ -71,37 +82,15 @@ class Story(AbstractStory):
         else:
             psdisplay(HTML(html), target="story")
 
-        class TOTO:
-            def __init__(self) -> None:
-                self.content = "Yolo"
-
         if tooltips is not None:
             i = 0
             for tt in tooltips:
-                run_js(
-                    f"""tippy("#troubadour_tooltip__{i}",
-                            {{
-                                content:"{tt}",
-                                allowHTML:true,
-                            }}
-                        );"""
-                )
-
+                render_tooltip(f"_{i}", tt)
                 i += 1
 
         if named_tooltips is not None:
-            i = 0
             for name, tt in named_tooltips.items():
-                run_js(
-                    f"""tippy("#troubadour_tooltip_{name}",
-                            {{
-                                content:"{tt}",
-                                allowHTML:true,
-                            }}
-                        );"""
-                )
-
-                i += 1
+                render_tooltip(name, tt)
 
         self._scroll_to_bottom()
 

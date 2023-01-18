@@ -1,6 +1,6 @@
 import re
 
-
+# FIXME are we using the labels?
 def troubadownify(input: str) -> tuple[str, list[str]]:
     """Parses troubadown markup in input string. Returns HTML output (with classes) and
     the list of tooltip ids.

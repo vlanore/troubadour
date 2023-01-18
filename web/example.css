@@ -75,6 +75,10 @@ html {
     visibility: hidden;
 }
 
+.dark-mode#story::-webkit-scrollbar-thumb {
+    background: rgb(55, 55, 55);
+}
+
 #story:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
@@ -102,5 +106,5 @@ html {
 
 .dark-mode .divider::before,
 .dark-mode .divider::after {
-    background-color: rgb(57, 57, 57);
+    background-color: rgb(55, 55, 55);
 }

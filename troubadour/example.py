@@ -51,14 +51,14 @@ def toggle_mode(_: Any) -> None:
     if mode == "dark":
         Element("dark-style").element.disabled = "disabled"
         Element("light-style").element.disabled = None
-        Element("main-container").remove_class("dark-mode")
+        Element("story").remove_class("dark-mode")
         mode = "light"
         Element("dark-mode-icon").remove_class("fa-sun")
         Element("dark-mode-icon").add_class("fa-moon")
     elif mode == "light":
         Element("dark-style").element.disabled = None
         Element("light-style").element.disabled = "disabled"
-        Element("main-container").add_class("dark-mode")
+        Element("story").add_class("dark-mode")
         mode = "dark"
         Element("dark-mode-icon").remove_class("fa-moon")
         Element("dark-mode-icon").add_class("fa-sun")

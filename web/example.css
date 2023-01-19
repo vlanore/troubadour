@@ -55,8 +55,7 @@ html {
     border-bottom-left-radius: 0.4em;
 }
 
-#story .card {
-    margin-top: 1em;
+#story>div {
     margin-bottom: 1em;
 }
 
@@ -86,13 +85,6 @@ html {
 #extra {
     width: 250px;
     flex: 1 0 auto;
-}
-
-
-#click {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .tooltip {

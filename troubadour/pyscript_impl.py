@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional
-from types import SimpleNamespace
+from typing import Optional, Callable
 
 import mistune
 from pyodide.code import run_js  # type: ignore
+from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import HTML  # type: ignore
 from pyscript import Element  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
@@ -47,7 +47,7 @@ def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
     Element("info-content").element.innerHTML = info_html
 
 
-def render_tooltip(id: str, text: str) -> None:
+def render_tooltip(id: int, text: str) -> None:
     run_js(
         f"""tippy("#troubadour_tooltip_{id}",
                 {{
@@ -75,7 +75,7 @@ class Story(AbstractStory):
     ) -> None:
         self.history.insert(0, text)
 
-        html, _ = troubadownify(text)
+        html, tt_labels = troubadownify(text)
 
         if markdown:
             psdisplay(HTML(mistune.html(html)), target="story")
@@ -83,14 +83,12 @@ class Story(AbstractStory):
             psdisplay(HTML(html), target="story")
 
         if tooltips is not None:
-            i = 0
-            for tt in tooltips:
-                render_tooltip(f"_{i}", tt)
-                i += 1
+            for i, tt in enumerate(tooltips):
+                render_tooltip(tt_labels[i], tt)
 
         if named_tooltips is not None:
             for name, tt in named_tooltips.items():
-                render_tooltip(name, tt)
+                render_tooltip(tt_labels[name], tt)
 
         self._scroll_to_bottom()
 
@@ -115,6 +113,15 @@ class Story(AbstractStory):
             ),
             target="story",
         )
+
+
+def add_button(
+    text: str, continuation: Callable, tooltip: Optional[str] = None
+) -> None:
+    Element("story-interface").write(
+        HTML(f'<button class="button" type="button" id="clicky">{text}</button>')
+    )
+    Element("clicky").element.addEventListener("click", create_proxy(continuation))
 
 
 if __name__ == "__main__":

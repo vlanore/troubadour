@@ -1,7 +1,9 @@
 import re
 
+from troubadour.id import get_id
+
 # FIXME are we using the labels?
-def troubadownify(input: str) -> tuple[str, list[str]]:
+def troubadownify(input: str) -> tuple[str, dict[str | int, int]]:
     """Parses troubadown markup in input string. Returns HTML output (with classes) and
     the list of tooltip ids.
 
@@ -21,8 +23,8 @@ def troubadownify(input: str) -> tuple[str, list[str]]:
 
     output = ""
     cursor = 0
-    next_tt_index = 0
-    tooltips = []
+    tooltips: dict[str | int, int] = {}
+    tt_count = 0
     for match in re.finditer(whole_re, input):
         groupdict = match.groupdict()
         output += input[cursor : match.start()] + '<span class="tooltip'
@@ -34,14 +36,16 @@ def troubadownify(input: str) -> tuple[str, list[str]]:
 
         match groupdict["tt"]:
             case "":
-                tooltips.append(f"_{next_tt_index}")
-                output += f' id="troubadour_tooltip__{next_tt_index}"'
-                next_tt_index += 1
+                id = get_id()
+                tooltips[tt_count] = id
+                output += f' id="troubadour_tooltip_{id}"'
+                tt_count += 1
             case None:
                 pass
             case s:
-                tooltips.append(s)
-                output += f' id="troubadour_tooltip_{s}"'
+                id = get_id()
+                tooltips[s] = id
+                output += f' id="troubadour_tooltip_{id}"'
 
         output += match.expand(r">\g<body></span>")
         cursor = match.end()

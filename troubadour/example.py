@@ -3,7 +3,7 @@ from typing import Any
 from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import Element  # type: ignore
 
-from troubadour.pyscript_impl import Story, InfoPanel, render_panels
+from troubadour.pyscript_impl import Story, InfoPanel, render_panels, add_button
 
 s = Story()
 
@@ -23,6 +23,11 @@ situation? Are we |?red:doomed|?
     named_tooltips={"lapin": "Je suis une tooltip"},
 )
 
+s.display(
+    "Je suis un |?test|.\n\nJe suis |?le roi| des test.",
+    tooltips=["Tooltip is life.", "tooltip is important"],
+)
+
 s.image("https://picsum.photos/800/200", "image")
 
 i = InfoPanel()
@@ -40,7 +45,7 @@ def pouic(_: Any) -> None:
     s.display("Hello")
 
 
-Element("click").element.addEventListener("click", create_proxy(pouic))
+# Element("click").element.addEventListener("click", create_proxy(pouic))
 
 
 mode = "light"
@@ -62,6 +67,9 @@ def toggle_mode(_: Any) -> None:
         mode = "dark"
         Element("dark-mode-icon").remove_class("fa-moon")
         Element("dark-mode-icon").add_class("fa-sun")
+
+
+add_button("Click me", pouic)
 
 
 Element("dark-mode-toggle").element.addEventListener("click", create_proxy(toggle_mode))

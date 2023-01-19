@@ -47,7 +47,7 @@
 
         <div id="story-container">
             <div id="story" class="content"></div>
-            <button type="button" class="button" id="click">Click</button>
+            <div id="story-interface"></div>
         </div>
 
         <div id="menu" class="card">
@@ -102,21 +102,14 @@
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
 
-    <script>
-        tippy('#click', {
-            content: 'My <b>tooltip</b>!',
-            allowHTML: true,
-            theme: 'translucent',
-        });
-    </script>
-
     <!-- main script -->
     <py-config>
         packages = ["jsonpickle", "mistune"]
 
         [[fetch]]
         from = ".."
-        files = [ "troubadour/pyscript_impl.py", "troubadour/interfaces.py", "troubadour/troubadown.py" ]
+        files = [ "troubadour/pyscript_impl.py", "troubadour/interfaces.py", "troubadour/troubadown.py",
+        "troubadour/id.py" ]
     </py-config>
     <py-script src="../troubadour/example.py" />
 

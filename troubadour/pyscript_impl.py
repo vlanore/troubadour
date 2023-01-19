@@ -16,6 +16,7 @@ from troubadour.interfaces import (
     AbstractStory,
 )
 from troubadour.troubadown import troubadownify
+from troubadour.id import get_id
 
 
 class InfoPanel(AbstractInfoPanel):
@@ -99,13 +100,14 @@ class Story(AbstractStory):
 
     def image(self, url: str, alt: str) -> None:
         # TODO: add to history!
+        id = get_id()
         psdisplay(
             HTML(
                 f"""
             <div class="card">
                 <div class="card-image">
                     <figure class="image">
-                    <img src="{url}" alt="{alt}">
+                    <img id="troubadour_image_{id}" src="{url}" alt="{alt}">
                     </figure>
                 </div>
             </div>
@@ -114,14 +116,27 @@ class Story(AbstractStory):
             target="story",
         )
 
+        stb = lambda _: self._scroll_to_bottom()
+
+        Element(f"troubadour_image_{id}").element.addEventListener(
+            "load", create_proxy(stb)
+        )
+
 
 def add_button(
     text: str, continuation: Callable, tooltip: Optional[str] = None
 ) -> None:
-    Element("story-interface").write(
-        HTML(f'<button class="button" type="button" id="clicky">{text}</button>')
+    id = get_id()
+    Element("story-interface").element.insertAdjacentHTML(
+        "beforeend",
+        (
+            '<button class="button" type="button" '
+            f'id="troubadour_button_{id}">{text}</button>'
+        ),
     )
-    Element("clicky").element.addEventListener("click", create_proxy(continuation))
+    Element(f"troubadour_button_{id}").element.addEventListener(
+        "click", create_proxy(continuation)
+    )
 
 
 if __name__ == "__main__":

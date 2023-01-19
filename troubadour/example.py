@@ -43,6 +43,17 @@ render_panels(i, e)
 def pouic(_: Any) -> None:
     s.newpage()
     s.display("Hello")
+    s.image("https://picsum.photos/800/150", "image")
+    Element("story-interface").element.innerHTML = ""
+    add_button("Click me", pouac)
+
+
+def pouac(_: Any) -> None:
+    s.newpage()
+    s.display("Hello world\n\nSo great")
+    Element("story-interface").element.innerHTML = ""
+    add_button("Pouac", pouac)
+    add_button("Pouic", pouic)
 
 
 # Element("click").element.addEventListener("click", create_proxy(pouic))

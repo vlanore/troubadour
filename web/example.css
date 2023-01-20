@@ -100,3 +100,10 @@ html {
 .dark-mode .divider::after {
     background-color: rgb(55, 55, 55);
 }
+
+#story-interface {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 1em;
+}

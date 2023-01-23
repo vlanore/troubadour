@@ -146,10 +146,12 @@ def run_page(game: AbstractGame, method: str) -> None:
     Element("story-interface").element.innerHTML = ""
     for element in interface:
         match element:
-            case Button(text, method, tooltip):
+            case Button(text, _method, tooltip):  # type:ignore
                 add_button(
-                    text, lambda _, method=method: run_page(game, method), tooltip
+                    text, lambda _, _method=_method: run_page(game, _method), tooltip
                 )
+            case _:
+                raise NotImplementedError()
 
 
 def run_game(game: AbstractGame) -> None:

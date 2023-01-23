@@ -17,6 +17,7 @@ class MyGame(AbstractGame):
     def start(self) -> list[AbstractInterface]:
         self.info.set_title("Informazion")
         self.info.set_text("str: **4**\n\nagi: **2**\n\nint: **3**")
+        self.extra.set_title("Egzdra")
         self.extra.set_text("things\n\nthings\n\nthings\n\nthings\n\nthings\n\nthangs")
 
         self.story.display(

@@ -43,10 +43,12 @@ def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
     extra_raw, extra_md = extra.get_text()
     extra_html = mistune.html(extra_raw) if extra_md else extra_raw
     Element("extra-content").element.innerHTML = extra_html
+    Element("extra-title").element.innerHTML = extra.get_title()
 
     info_raw, info_md = info.get_text()
     info_html = mistune.html(info_raw) if info_md else info_raw
     Element("info-content").element.innerHTML = info_html
+    Element("info-title").element.innerHTML = info.get_title()
 
 
 def render_tooltip(id: int, text: str) -> None:

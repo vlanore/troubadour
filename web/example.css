@@ -107,3 +107,7 @@ html {
     justify-content: center;
     gap: 1em;
 }
+
+#story-interface>.button {
+    flex-grow: 1;
+}

@@ -14,6 +14,7 @@ from troubadour.interfaces import (
     AbstractImagePanel,
     AbstractInfoPanel,
     AbstractStory,
+    Button,
 )
 from troubadour.troubadown import troubadownify
 from troubadour.id import get_id
@@ -137,6 +138,22 @@ def add_button(
     Element(f"troubadour_button_{id}").element.addEventListener(
         "click", create_proxy(continuation)
     )
+
+
+def run_page(game: AbstractGame, method: str) -> None:
+    interface = getattr(game, method)()
+    render_panels(game.info, game.extra)
+    Element("story-interface").element.innerHTML = ""
+    for element in interface:
+        match element:
+            case Button(text, method, tooltip):
+                add_button(
+                    text, lambda _, method=method: run_page(game, method), tooltip
+                )
+
+
+def run_game(game: AbstractGame) -> None:
+    run_page(game, "start")
 
 
 if __name__ == "__main__":

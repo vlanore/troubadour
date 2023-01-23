@@ -1,5 +1,6 @@
+from dataclasses import dataclass
 from abc import abstractmethod
-from typing import Optional, Protocol
+from typing import Optional, Protocol, Callable, Any
 
 
 class AbstractStory(Protocol):
@@ -41,8 +42,23 @@ class AbstractImagePanel(Protocol):
         pass
 
 
+class AbstractInterface(Protocol):
+    pass
+
+
 class AbstractGame(Protocol):
     story: AbstractStory
     info: AbstractInfoPanel
     extra: AbstractInfoPanel
-    porthole: AbstractImagePanel
+    # porthole: AbstractImagePanel
+
+    @abstractmethod
+    def start(self) -> list[AbstractInterface]:
+        pass
+
+
+@dataclass
+class Button(AbstractInterface):
+    text: str
+    method: str
+    tooltip: str = ""

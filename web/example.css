@@ -15,11 +15,11 @@ html {
     padding: 15px;
 }
 
-#portrait {
-    aspect-ratio: 3/4;
+#porthole-container {
+    /* aspect-ratio: 3/4; */
     width: 250px;
     margin-bottom: 0;
-    background-image: url("https://picsum.photos/300/400");
+    /* background-image: url("https://picsum.photos/300/400"); */
     background-size: cover;
 }
 
@@ -49,7 +49,8 @@ html {
     margin: 0;
 }
 
-#story .card figure img {
+#story .card figure img,
+#porthole {
     display: block;
     border-bottom-right-radius: 0.4em;
     border-bottom-left-radius: 0.4em;

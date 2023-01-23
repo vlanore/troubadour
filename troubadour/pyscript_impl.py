@@ -39,6 +39,29 @@ class InfoPanel(AbstractInfoPanel):
         return self.text, self.markdown
 
 
+class ImagePanel(AbstractImagePanel):
+    def __init__(self) -> None:
+        self.url = ""
+        self.alt = ""
+
+    def get_url(self) -> str:
+        return self.url
+
+    def set_url(self, value: str) -> None:
+        self.url = value
+
+    def get_alt(self) -> str:
+        return self.alt
+
+    def set_alt(self, value: str) -> None:
+        self.alt = value
+
+
+def render_porthole(porthole: AbstractImagePanel) -> None:
+    Element("porthole").element.src = porthole.get_url()
+    Element("porthole").element.alt = porthole.get_alt()
+
+
 def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
     extra_raw, extra_md = extra.get_text()
     extra_html = mistune.html(extra_raw) if extra_md else extra_raw
@@ -145,6 +168,7 @@ def add_button(
 def run_page(game: AbstractGame, method: str) -> None:
     interface = getattr(game, method)()
     render_panels(game.info, game.extra)
+    render_porthole(game.porthole)
     Element("story-interface").element.innerHTML = ""
     for element in interface:
         match element:

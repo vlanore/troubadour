@@ -50,7 +50,7 @@ class AbstractGame(Protocol):
     story: AbstractStory
     info: AbstractInfoPanel
     extra: AbstractInfoPanel
-    # porthole: AbstractImagePanel
+    porthole: AbstractImagePanel
 
     @abstractmethod
     def start(self) -> list[AbstractInterface]:

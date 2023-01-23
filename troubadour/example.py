@@ -5,7 +5,7 @@ from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import Element  # type: ignore
 
 from troubadour.interfaces import Button, AbstractGame, AbstractInterface
-from troubadour.pyscript_impl import Story, InfoPanel, add_button, run_game
+from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel
 
 
 @dataclass
@@ -13,8 +13,10 @@ class MyGame(AbstractGame):
     story: Story
     info: InfoPanel
     extra: InfoPanel
+    porthole: ImagePanel
 
     def start(self) -> list[AbstractInterface]:
+        self.porthole.set_url("https://picsum.photos/300/350")
         self.info.set_title("Informazion")
         self.info.set_text("str: **4**\n\nagi: **2**\n\nint: **3**")
         self.extra.set_title("Egzdra")
@@ -61,7 +63,7 @@ situation? Are we |?red:doomed|?
         ]
 
 
-game = MyGame(Story(), InfoPanel(), InfoPanel())
+game = MyGame(Story(), InfoPanel(), InfoPanel(), ImagePanel())
 run_game(game)
 
 mode = "light"

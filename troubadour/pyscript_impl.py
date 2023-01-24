@@ -1,13 +1,15 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, Callable
+from typing import Optional, Callable, Any
 
+import jsonpickle as jsp
 import mistune
 from pyodide.code import run_js  # type: ignore
 from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import HTML  # type: ignore
 from pyscript import Element  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
+from pyscript import js  # type: ignore
 
 from troubadour.interfaces import (
     AbstractGame,
@@ -178,10 +180,38 @@ def run_page(game: AbstractGame, method: str) -> None:
                 )
             case _:
                 raise NotImplementedError()
+    js.localStorage.setItem("game", jsp.encode(game))
 
 
 def run_game(game: AbstractGame) -> None:
     run_page(game, "start")
+
+
+LIGHT_MODE = "light"
+
+
+def toggle_mode(_: Any) -> None:
+    global LIGHT_MODE
+    if LIGHT_MODE == "dark":
+        Element("dark-style").element.disabled = "disabled"
+        Element("light-style").element.disabled = None
+        Element("story").remove_class("dark-mode")
+        LIGHT_MODE = "light"
+        Element("dark-mode-icon").remove_class("fa-sun")
+        Element("dark-mode-icon").add_class("fa-moon")
+    elif LIGHT_MODE == "light":
+        Element("dark-style").element.disabled = None
+        Element("light-style").element.disabled = "disabled"
+        Element("story").add_class("dark-mode")
+        LIGHT_MODE = "dark"
+        Element("dark-mode-icon").remove_class("fa-moon")
+        Element("dark-mode-icon").add_class("fa-sun")
+
+
+def init_page() -> None:
+    Element("dark-mode-toggle").element.addEventListener(
+        "click", create_proxy(toggle_mode)
+    )
 
 
 if __name__ == "__main__":

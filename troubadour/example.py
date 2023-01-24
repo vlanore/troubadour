@@ -1,19 +1,19 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import Element  # type: ignore
 
 from troubadour.interfaces import Button, AbstractGame, AbstractInterface
-from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel
+from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel, init_page
 
 
 @dataclass
 class MyGame(AbstractGame):
-    story: Story
-    info: InfoPanel
-    extra: InfoPanel
-    porthole: ImagePanel
+    story: Story = field(default_factory=Story)
+    info: InfoPanel = field(default_factory=InfoPanel)
+    extra: InfoPanel = field(default_factory=InfoPanel)
+    porthole: ImagePanel = field(default_factory=ImagePanel)
 
     def start(self) -> list[AbstractInterface]:
         self.porthole.set_url("https://picsum.photos/300/350")
@@ -63,28 +63,5 @@ situation? Are we |?red:doomed|?
         ]
 
 
-game = MyGame(Story(), InfoPanel(), InfoPanel(), ImagePanel())
-run_game(game)
-
-mode = "light"
-
-
-def toggle_mode(_: Any) -> None:
-    global mode
-    if mode == "dark":
-        Element("dark-style").element.disabled = "disabled"
-        Element("light-style").element.disabled = None
-        Element("story").remove_class("dark-mode")
-        mode = "light"
-        Element("dark-mode-icon").remove_class("fa-sun")
-        Element("dark-mode-icon").add_class("fa-moon")
-    elif mode == "light":
-        Element("dark-style").element.disabled = None
-        Element("light-style").element.disabled = "disabled"
-        Element("story").add_class("dark-mode")
-        mode = "dark"
-        Element("dark-mode-icon").remove_class("fa-moon")
-        Element("dark-mode-icon").add_class("fa-sun")
-
-
-Element("dark-mode-toggle").element.addEventListener("click", create_proxy(toggle_mode))
+init_page()
+run_game(MyGame())

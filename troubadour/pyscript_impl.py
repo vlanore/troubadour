@@ -205,6 +205,24 @@ def run_game(game: AbstractGame) -> None:
         "click", create_proxy(load_cache_data)
     )
 
+    Element("restart-button").element.addEventListener(
+        "click", create_proxy(lambda _: Element("restart-modal").add_class("is-active"))
+    )
+
+    def restart2(_: Any) -> None:
+        Element("story").element.innerHTML = ""
+        run_page(game, "start")
+        Element("restart-modal").remove_class("is-active")
+
+    Element("restart-modal-restart").element.addEventListener(
+        "click", create_proxy(restart2)
+    )
+
+    Element("restart-modal-cancel").element.addEventListener(
+        "click",
+        create_proxy(lambda _: Element("restart-modal").remove_class("is-active")),
+    )
+
     if js.localStorage.getItem("game") is None:
         run_page(game, "start")
     else:

@@ -80,7 +80,7 @@
                 </a>
                 <a class="has-text-primary card-footer-item" href="javascript:void(0);">
                     <span class="icon">
-                        <i class="fa-solid fa-power-off"></i>
+                        <i id="restart-button" class="fa-solid fa-power-off"></i>
                     </span>
                 </a>
             </footer>
@@ -115,6 +115,22 @@
                 <p style="text-align: right;">
                     <button id="load-modal-load" class="button is-success">Load</button>
                     <button id="load-modal-restart" class="button">Restart</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="restart-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Restart</p>
+            </header>
+            <div class="modal-card-body">
+                Are you sure you want to restart?
+                <p style="text-align: right;">
+                    <button id="restart-modal-restart" class="button is-success">Yes</button>
+                    <button id="restart-modal-cancel" class="button">Cancel</button>
                 </p>
             </div>
         </div>

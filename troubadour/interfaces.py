@@ -1,9 +1,11 @@
 from dataclasses import dataclass
 from abc import abstractmethod
-from typing import Optional, Protocol, Callable, Any
+from typing import Optional, Protocol, runtime_checkable
 
 
 class AbstractStory(Protocol):
+    history: list[str]
+
     @abstractmethod
     def display(
         self,
@@ -11,6 +13,7 @@ class AbstractStory(Protocol):
         markdown: bool = True,
         tooltips: Optional[list[str]] = None,
         named_tooltips: Optional[dict[str, str]] = None,
+        write_to_history: bool = True,
     ) -> None:
         pass
 
@@ -46,6 +49,7 @@ class AbstractInterface(Protocol):
     pass
 
 
+@runtime_checkable
 class AbstractGame(Protocol):
     story: AbstractStory
     info: AbstractInfoPanel

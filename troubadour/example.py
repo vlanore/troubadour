@@ -1,11 +1,7 @@
 from dataclasses import dataclass, field
-from typing import Any
-
-from pyodide.ffi import create_proxy  # type: ignore
-from pyscript import Element  # type: ignore
 
 from troubadour.interfaces import Button, AbstractGame, AbstractInterface
-from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel, init_page
+from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel
 
 
 @dataclass
@@ -63,5 +59,4 @@ situation? Are we |?red:doomed|?
         ]
 
 
-init_page()
 run_game(MyGame())

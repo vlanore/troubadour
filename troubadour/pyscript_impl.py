@@ -15,6 +15,7 @@ from troubadour.interfaces import (
     AbstractGame,
     AbstractImagePanel,
     AbstractInfoPanel,
+    AbstractInterface,
     AbstractStory,
     Button,
 )
@@ -101,8 +102,10 @@ class Story(AbstractStory):
         markdown: bool = True,
         tooltips: Optional[list[str]] = None,
         named_tooltips: Optional[dict[str, str]] = None,
+        write_to_history: bool = True,
     ) -> None:
-        self.history.insert(0, text)
+        if write_to_history:
+            self.history.insert(0, text)
 
         html, tt_labels = troubadownify(text)
 
@@ -127,21 +130,16 @@ class Story(AbstractStory):
         self._scroll_to_bottom()
 
     def image(self, url: str, alt: str) -> None:
-        # TODO: add to history!
         id = get_id()
-        psdisplay(
-            HTML(
-                f"""
-            <div class="card">
+        self.display(
+            f"""<div class="card">
                 <div class="card-image">
                     <figure class="image">
                     <img id="troubadour_image_{id}" src="{url}" alt="{alt}">
                     </figure>
                 </div>
-            </div>
-            """
-            ),
-            target="story",
+            </div>""",
+            markdown=False,
         )
 
         stb = lambda _: self._scroll_to_bottom()
@@ -181,10 +179,30 @@ def run_page(game: AbstractGame, method: str) -> None:
             case _:
                 raise NotImplementedError()
     js.localStorage.setItem("game", jsp.encode(game))
+    js.localStorage.setItem("interface", jsp.encode(interface))
 
 
 def run_game(game: AbstractGame) -> None:
-    run_page(game, "start")
+    Element("dark-mode-toggle").element.addEventListener(
+        "click", create_proxy(toggle_mode)
+    )
+
+    def restart(_: Any) -> None:
+        run_page(game, "start")
+        close_load_modal(None)
+
+    Element("load-modal-restart").element.addEventListener(
+        "click", create_proxy(restart)
+    )
+
+    Element("load-modal-load").element.addEventListener(
+        "click", create_proxy(load_cache_data)
+    )
+
+    if js.localStorage.getItem("game") is None:
+        run_page(game, "start")
+    else:
+        Element("load-modal").add_class("is-active")
 
 
 LIGHT_MODE = "light"
@@ -208,10 +226,33 @@ def toggle_mode(_: Any) -> None:
         Element("dark-mode-icon").add_class("fa-sun")
 
 
-def init_page() -> None:
-    Element("dark-mode-toggle").element.addEventListener(
-        "click", create_proxy(toggle_mode)
-    )
+def close_load_modal(_: Any) -> None:
+    Element("load-modal").remove_class("is-active")
+
+
+def load_cache_data(_: Any) -> None:
+    game = jsp.decode(js.localStorage.getItem("game"))
+    assert isinstance(game, AbstractGame)
+    interface = jsp.decode(js.localStorage.getItem("interface"))
+
+    Element("story").element.innerHTML = ""
+    for msg in reversed(game.story.history):
+        game.story.display(msg, write_to_history=False)
+
+    render_panels(game.info, game.extra)
+    render_porthole(game.porthole)
+
+    Element("story-interface").element.innerHTML = ""
+    for element in interface:
+        match element:
+            case Button(text, _method, tooltip):  # type:ignore
+                add_button(
+                    text, lambda _, _method=_method: run_page(game, _method), tooltip
+                )
+            case _:
+                raise NotImplementedError()
+
+    close_load_modal(None)
 
 
 if __name__ == "__main__":

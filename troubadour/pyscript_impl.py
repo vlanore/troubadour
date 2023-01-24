@@ -65,6 +65,13 @@ class ImagePanel(AbstractImagePanel):
         self.alt = value
 
 
+@dataclass
+class GameState:
+    game: AbstractGame
+    interface: list[AbstractInterface]
+    color_mode: str
+
+
 def render_porthole(porthole: AbstractImagePanel) -> None:
     Element("porthole").element.src = porthole.get_url()
     Element("porthole").element.alt = porthole.get_alt()
@@ -185,8 +192,7 @@ def run_page(game: AbstractGame, method: str) -> None:
                 )
             case _:
                 raise NotImplementedError()
-    js.localStorage.setItem("game", jsp.encode(game))
-    js.localStorage.setItem("interface", jsp.encode(interface))
+    js.localStorage.setItem("state", jsp.encode(GameState(game, interface, LIGHT_MODE)))
 
 
 def run_game(game: AbstractGame) -> None:
@@ -224,9 +230,11 @@ def run_game(game: AbstractGame) -> None:
         create_proxy(lambda _: Element("restart-modal").remove_class("is-active")),
     )
 
-    if js.localStorage.getItem("game") is None:
+    if js.localStorage.getItem("state") is None:
         run_page(game, "start")
     else:
+        if jsp.decode(js.localStorage.getItem("state")).color_mode == "dark":
+            toggle_mode(None)
         Element("load-modal").add_class("is-active")
 
 
@@ -249,6 +257,10 @@ def toggle_mode(_: Any) -> None:
         LIGHT_MODE = "dark"
         Element("dark-mode-icon").remove_class("fa-moon")
         Element("dark-mode-icon").add_class("fa-sun")
+    state = jsp.decode(js.localStorage.getItem("state"))
+    assert isinstance(state, GameState)
+    state.color_mode = LIGHT_MODE
+    js.localStorage.setItem("state", jsp.encode(state))
 
 
 def close_load_modal(_: Any) -> None:
@@ -256,33 +268,34 @@ def close_load_modal(_: Any) -> None:
 
 
 def load_cache_data(_: Any) -> None:
-    game = jsp.decode(js.localStorage.getItem("game"))
-    assert isinstance(game, AbstractGame)
-    interface = jsp.decode(js.localStorage.getItem("interface"))
+    state = jsp.decode(js.localStorage.getItem("state"))
+    assert isinstance(state, GameState)
 
     Element("story").element.innerHTML = ""
-    old_history = game.story.history.copy()
-    game.story.history = []
+    old_history = state.game.story.history.copy()
+    state.game.story.history = []
     for cmd in reversed(old_history):
         match cmd:
             case DisplayCmd(text, markdown, tooltips, named_tooltips):  # type:ignore
-                game.story.display(text, markdown, tooltips, named_tooltips)
+                state.game.story.display(text, markdown, tooltips, named_tooltips)
             case NewPageCmd():  # type:ignore
-                game.story.newpage()
+                state.game.story.newpage()
             case ImageCmd(url, alt):  # type:ignore
-                game.story.image(url, alt)
+                state.game.story.image(url, alt)
             case _:
                 raise NotImplementedError()
 
-    render_panels(game.info, game.extra)
-    render_porthole(game.porthole)
+    render_panels(state.game.info, state.game.extra)
+    render_porthole(state.game.porthole)
 
     Element("story-interface").element.innerHTML = ""
-    for element in interface:
+    for element in state.interface:
         match element:
             case Button(text, _method, tooltip):  # type:ignore
                 add_button(
-                    text, lambda _, _method=_method: run_page(game, _method), tooltip
+                    text,
+                    lambda _, _method=_method: run_page(state.game, _method),
+                    tooltip,
                 )
             case _:
                 raise NotImplementedError()

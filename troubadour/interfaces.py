@@ -3,8 +3,29 @@ from abc import abstractmethod
 from typing import Optional, Protocol, runtime_checkable
 
 
+@dataclass
+class DisplayCmd:
+    text: str
+    markdown: bool = True
+    tooltips: Optional[list[str]] = None
+    named_tooltips: Optional[dict[str, str]] = None
+
+
+class NewPageCmd:
+    pass
+
+
+@dataclass
+class ImageCmd:
+    url: str
+    alt: str
+
+
+Cmd = DisplayCmd | NewPageCmd | ImageCmd
+
+
 class AbstractStory(Protocol):
-    history: list[str]
+    history: list[Cmd]
 
     @abstractmethod
     def display(
@@ -13,7 +34,6 @@ class AbstractStory(Protocol):
         markdown: bool = True,
         tooltips: Optional[list[str]] = None,
         named_tooltips: Optional[dict[str, str]] = None,
-        write_to_history: bool = True,
     ) -> None:
         pass
 

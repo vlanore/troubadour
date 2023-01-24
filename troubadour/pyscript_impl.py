@@ -18,6 +18,10 @@ from troubadour.interfaces import (
     AbstractInterface,
     AbstractStory,
     Button,
+    ImageCmd,
+    DisplayCmd,
+    NewPageCmd,
+    Cmd,
 )
 from troubadour.troubadown import troubadownify
 from troubadour.id import get_id
@@ -90,7 +94,7 @@ def render_tooltip(id: int, text: str) -> None:
 
 @dataclass
 class Story(AbstractStory):
-    history: list[str] = field(default_factory=list)
+    history: list[Cmd] = field(default_factory=list)
 
     def _scroll_to_bottom(self) -> None:
         tgt = Element("story").element
@@ -102,10 +106,8 @@ class Story(AbstractStory):
         markdown: bool = True,
         tooltips: Optional[list[str]] = None,
         named_tooltips: Optional[dict[str, str]] = None,
-        write_to_history: bool = True,
     ) -> None:
-        if write_to_history:
-            self.history.insert(0, text)
+        self.history.insert(0, DisplayCmd(text, markdown, tooltips, named_tooltips))
 
         html, tt_labels = troubadownify(text)
 
@@ -125,21 +127,25 @@ class Story(AbstractStory):
         self._scroll_to_bottom()
 
     def newpage(self) -> None:
+        self.history.insert(0, NewPageCmd())
         t = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         psdisplay(HTML(f'<div class="divider">{t}</div>'), target="story")
         self._scroll_to_bottom()
 
     def image(self, url: str, alt: str) -> None:
+        self.history.insert(0, ImageCmd(url, alt))
         id = get_id()
-        self.display(
-            f"""<div class="card">
+        psdisplay(
+            HTML(
+                f"""<div class="card">
                 <div class="card-image">
                     <figure class="image">
                     <img id="troubadour_image_{id}" src="{url}" alt="{alt}">
                     </figure>
                 </div>
-            </div>""",
-            markdown=False,
+            </div>"""
+            ),
+            target="story",
         )
 
         stb = lambda _: self._scroll_to_bottom()
@@ -236,8 +242,18 @@ def load_cache_data(_: Any) -> None:
     interface = jsp.decode(js.localStorage.getItem("interface"))
 
     Element("story").element.innerHTML = ""
-    for msg in reversed(game.story.history):
-        game.story.display(msg, write_to_history=False)
+    old_history = game.story.history.copy()
+    game.story.history = []
+    for cmd in reversed(old_history):
+        match cmd:
+            case DisplayCmd(text, markdown, tooltips, named_tooltips):  # type:ignore
+                game.story.display(text, markdown, tooltips, named_tooltips)
+            case NewPageCmd():  # type:ignore
+                game.story.newpage()
+            case ImageCmd(url, alt):  # type:ignore
+                game.story.image(url, alt)
+            case _:
+                raise NotImplementedError()
 
     render_panels(game.info, game.extra)
     render_porthole(game.porthole)

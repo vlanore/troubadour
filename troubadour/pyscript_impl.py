@@ -1,3 +1,4 @@
+from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional, Callable, Any
@@ -209,9 +210,9 @@ def run_game(game: AbstractGame) -> None:
         "click", create_proxy(lambda _: Element("restart-modal").add_class("is-active"))
     )
 
-    def restart2(_: Any) -> None:
+    def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
         Element("story").element.innerHTML = ""
-        run_page(game, "start")
+        run_page(deepcopy(new_game), "start")
         Element("restart-modal").remove_class("is-active")
 
     Element("restart-modal-restart").element.addEventListener(

@@ -179,6 +179,16 @@ def add_button(
     )
 
 
+def get_state() -> Optional[GameState]:
+    encoded_state = js.localStorage.getItem("state")
+    if encoded_state is not None:
+        state = jsp.decode(encoded_state)
+        assert isinstance(state, GameState)
+        return state
+    else:
+        return None
+
+
 def run_page(game: AbstractGame, method: str) -> None:
     interface = getattr(game, method)()
     render_panels(game.info, game.extra)
@@ -230,10 +240,11 @@ def run_game(game: AbstractGame) -> None:
         create_proxy(lambda _: Element("restart-modal").remove_class("is-active")),
     )
 
-    if js.localStorage.getItem("state") is None:
+    state = get_state()
+    if state is None:
         run_page(game, "start")
     else:
-        if jsp.decode(js.localStorage.getItem("state")).color_mode == "dark":
+        if state.color_mode == "dark":
             toggle_mode(None)
         Element("reload-modal").add_class("is-active")
 

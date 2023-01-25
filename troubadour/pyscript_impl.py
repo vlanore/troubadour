@@ -240,13 +240,13 @@ def run_game(game: AbstractGame) -> None:
         create_proxy(lambda _: Element("restart-modal").remove_class("is-active")),
     )
 
-    state = get_state()
-    if state is None:
-        run_page(game, "start")
-    else:
-        if state.color_mode == "dark":
-            toggle_mode(None)
-        Element("reload-modal").add_class("is-active")
+    match get_state():
+        case None:
+            run_page(game, "start")
+        case GameState(color_mode):
+            if color_mode == "dark":
+                toggle_mode(None)
+            Element("reload-modal").add_class("is-active")
 
 
 LIGHT_MODE = "light"

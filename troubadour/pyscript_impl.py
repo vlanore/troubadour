@@ -204,11 +204,11 @@ def run_game(game: AbstractGame) -> None:
         run_page(game, "start")
         close_load_modal(None)
 
-    Element("load-modal-restart").element.addEventListener(
+    Element("reload-modal-restart").element.addEventListener(
         "click", create_proxy(restart)
     )
 
-    Element("load-modal-load").element.addEventListener(
+    Element("reload-modal-load").element.addEventListener(
         "click", create_proxy(load_cache_data)
     )
 
@@ -235,7 +235,7 @@ def run_game(game: AbstractGame) -> None:
     else:
         if jsp.decode(js.localStorage.getItem("state")).color_mode == "dark":
             toggle_mode(None)
-        Element("load-modal").add_class("is-active")
+        Element("reload-modal").add_class("is-active")
 
 
 LIGHT_MODE = "light"
@@ -264,7 +264,7 @@ def toggle_mode(_: Any) -> None:
 
 
 def close_load_modal(_: Any) -> None:
-    Element("load-modal").remove_class("is-active")
+    Element("reload-modal").remove_class("is-active")
 
 
 def load_cache_data(_: Any) -> None:

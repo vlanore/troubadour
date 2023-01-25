@@ -174,9 +174,7 @@ def add_button(
             f'id="troubadour_button_{id}">{text}</button>'
         ),
     )
-    Element(f"troubadour_button_{id}").element.addEventListener(
-        "click", create_proxy(continuation)
-    )
+    onclick(f"troubadour_button_{id}", continuation)
 
 
 def get_state() -> Optional[GameState]:
@@ -205,45 +203,36 @@ def run_page(game: AbstractGame, method: str) -> None:
     js.localStorage.setItem("state", jsp.encode(GameState(game, interface, LIGHT_MODE)))
 
 
+def onclick(id: str, func: Callable[[Any], None]) -> None:
+    Element(id).element.addEventListener("click", create_proxy(func))
+
+
 def run_game(game: AbstractGame) -> None:
-    Element("dark-mode-toggle").element.addEventListener(
-        "click", create_proxy(toggle_mode)
-    )
+    onclick("dark-mode-toggle", toggle_mode)
 
     def restart(_: Any) -> None:
         run_page(game, "start")
         close_load_modal(None)
 
-    Element("reload-modal-restart").element.addEventListener(
-        "click", create_proxy(restart)
-    )
-
-    Element("reload-modal-load").element.addEventListener(
-        "click", create_proxy(load_cache_data)
-    )
-
-    Element("restart-button").element.addEventListener(
-        "click", create_proxy(lambda _: Element("restart-modal").add_class("is-active"))
-    )
+    onclick("reload-modal-restart", restart)
+    onclick("reload-modal-load", load_cache_data)
 
     def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
         Element("story").element.innerHTML = ""
         run_page(deepcopy(new_game), "start")
         Element("restart-modal").remove_class("is-active")
 
-    Element("restart-modal-restart").element.addEventListener(
-        "click", create_proxy(restart2)
-    )
-
-    Element("restart-modal-cancel").element.addEventListener(
-        "click",
-        create_proxy(lambda _: Element("restart-modal").remove_class("is-active")),
+    onclick("restart-button", lambda _: Element("restart-modal").add_class("is-active"))
+    onclick("restart-modal-restart", restart2)
+    onclick(
+        "restart-modal-cancel",
+        lambda _: Element("restart-modal").remove_class("is-active"),
     )
 
     match get_state():
         case None:
             run_page(game, "start")
-        case GameState(color_mode):
+        case GameState(color_mode=color_mode):
             if color_mode == "dark":
                 toggle_mode(None)
             Element("reload-modal").add_class("is-active")

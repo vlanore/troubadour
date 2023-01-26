@@ -100,6 +100,10 @@ class GameSaves:
                 </th>
             </tr>""",
             )
+            onclick(
+                f"troubadour-rmsave-{save.nb}",
+                lambda _, id=save.nb: delete_save(id),  # type:ignore
+            )
 
 
 def render_porthole(porthole: AbstractImagePanel) -> None:
@@ -259,6 +263,14 @@ def save_game() -> None:
     saves.render()
     js.localStorage.setItem("saves", jsp.encode(saves))
     Element("save-modal").remove_class("is-active")
+
+
+def delete_save(id: int) -> None:
+    saves = get_saves()
+    assert isinstance(saves, GameSaves)
+    saves.saves = [save for save in saves.saves if save.nb != id]
+    js.localStorage.setItem("saves", jsp.encode(saves))
+    saves.render()
 
 
 def run_game(game: AbstractGame) -> None:

@@ -93,7 +93,7 @@ class GameSaves:
             <tr>
                 <th>{save.nb}</th>
                 <th>{save.name}</th>
-                <th>{save.date.strftime("%Y-%m-%d %H:%M:%S")}</th>
+                <th>{save.date.strftime("%Y-%m-%d %H:%M")}</th>
                 <th>
                     <a id="troubadour-load-{save.nb}" href="javascript:void(0);">Load</a> -
                     <a id="troubadour-rmsave-{save.nb}" href="javascript:void(0);">Delete</a>
@@ -108,6 +108,7 @@ class GameSaves:
                 f"troubadour-load-{save.nb}",
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
+        onclick("load-modal-import", lambda _: None)  # TODO
         run_js(
             f"""
 const blob = new Blob([`{str(jsp.encode(self)).encode("unicode_escape").decode("utf-8")}`], {{type: 'text/json'}});
@@ -116,6 +117,21 @@ button.href = URL.createObjectURL(blob);
 button.download = "saves.json";
         """
         )
+        # FIXME revoke url
+
+    def get_next_id(self) -> int:
+        if self.saves == []:
+            return 0
+        else:
+            return max(save.nb for save in self.saves) + 1
+
+    def merge(self, other: "GameSaves") -> None:
+        next_id = self.get_next_id()
+        for save in other.saves:
+            if save not in self.saves:
+                save.nb = next_id
+                next_id += 1
+                self.saves.append(save)
 
 
 def render_porthole(porthole: AbstractImagePanel) -> None:
@@ -268,7 +284,7 @@ def save_game() -> None:
     state = get_state()
     assert isinstance(state, GameState)
     assert isinstance(saves, GameSaves)
-    id = max(save.nb for save in saves.saves) + 1
+    id = saves.get_next_id()
     name = Element("save-input").element.value
     time = datetime.today()
     saves.saves.append(GameSave(id, name, state, time))

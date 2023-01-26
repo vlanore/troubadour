@@ -72,6 +72,36 @@ class GameState:
     color_mode: str
 
 
+@dataclass
+class GameSave:
+    nb: int
+    name: str
+    save: GameState
+    date: datetime
+
+
+@dataclass
+class GameSaves:
+    saves: list[GameSave] = field(default_factory=list)
+
+    def render(self) -> None:
+        Element("saves-table").element.innerHTML = ""
+        for save in self.saves:
+            Element("saves-table").element.insertAdjacentHTML(
+                "beforeend",
+                f"""
+            <tr>
+                <th>{save.nb}</th>
+                <th>{save.name}</th>
+                <th>{save.date.strftime("%Y-%m-%d %H:%M:%S")}</th>
+                <th>
+                    <a id="troubadour-load-{save.nb}" href="javascript:void(0);">Load</a> -
+                    <a id="troubadour-rmsave-{save.nb}" href="javascript:void(0);">Delete</a>
+                </th>
+            </tr>""",
+            )
+
+
 def render_porthole(porthole: AbstractImagePanel) -> None:
     Element("porthole").element.src = porthole.get_url()
     Element("porthole").element.alt = porthole.get_alt()
@@ -187,6 +217,16 @@ def get_state() -> Optional[GameState]:
         return None
 
 
+def get_saves() -> Optional[GameSaves]:
+    encoded_saves = js.localStorage.getItem("saves")
+    if encoded_saves is not None:
+        saves = jsp.decode(encoded_saves)
+        assert isinstance(saves, GameSaves)
+        return saves
+    else:
+        return None
+
+
 def run_page(game: AbstractGame, method: str) -> None:
     interface = getattr(game, method)()
     render_panels(game.info, game.extra)
@@ -207,16 +247,50 @@ def onclick(id: str, func: Callable[[Any], None]) -> None:
     Element(id).element.addEventListener("click", create_proxy(func))
 
 
+def save_game() -> None:
+    saves = get_saves()
+    state = get_state()
+    assert isinstance(state, GameState)
+    assert isinstance(saves, GameSaves)
+    id = max(save.nb for save in saves.saves) + 1
+    name = Element("save-input").element.value
+    time = datetime.today()
+    saves.saves.append(GameSave(id, name, state, time))
+    saves.render()
+    js.localStorage.setItem("saves", jsp.encode(saves))
+    Element("save-modal").remove_class("is-active")
+
+
 def run_game(game: AbstractGame) -> None:
+    # saves
+    match get_saves():
+        case None:
+            js.localStorage.setItem("saves", jsp.encode(GameSaves()))
+        case GameSaves() as saves:
+            saves.render()
+
+    onclick("load-button", lambda _: Element("load-modal").add_class("is-active"))
+    onclick(
+        "load-modal-cancel", lambda _: Element("load-modal").remove_class("is-active")
+    )
+    onclick("save-button", lambda _: Element("save-modal").add_class("is-active"))
+    onclick("save-modal-save", lambda _: save_game())
+    onclick(
+        "save-modal-cancel", lambda _: Element("save-modal").remove_class("is-active")
+    )
+
+    # dark mode
     onclick("dark-mode-toggle", toggle_mode)
 
+    # reload modal
     def restart(_: Any) -> None:
         run_page(game, "start")
-        close_load_modal(None)
+        close_reload_modal(None)
 
     onclick("reload-modal-restart", restart)
     onclick("reload-modal-load", load_cache_data)
 
+    # restart button
     def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
         Element("story").element.innerHTML = ""
         run_page(deepcopy(new_game), "start")
@@ -229,6 +303,7 @@ def run_game(game: AbstractGame) -> None:
         lambda _: Element("restart-modal").remove_class("is-active"),
     )
 
+    # start game
     match get_state():
         case None:
             run_page(game, "start")
@@ -263,7 +338,7 @@ def toggle_mode(_: Any) -> None:
     js.localStorage.setItem("state", jsp.encode(state))
 
 
-def close_load_modal(_: Any) -> None:
+def close_reload_modal(_: Any) -> None:
     Element("reload-modal").remove_class("is-active")
 
 
@@ -300,7 +375,7 @@ def load_cache_data(_: Any) -> None:
             case _:
                 raise NotImplementedError()
 
-    close_load_modal(None)
+    close_reload_modal(None)
 
 
 if __name__ == "__main__":

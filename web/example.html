@@ -58,12 +58,12 @@
 
         <div id="menu" class="card">
             <footer class="card-footer">
-                <a class="has-text-primary card-footer-item" href="javascript:void(0);">
+                <a id="save-button" class="has-text-primary card-footer-item" href="javascript:void(0);">
                     <span class="icon">
                         <i class="fa-solid fa-floppy-disk"></i>
                     </span>
                 </a>
-                <a class="has-text-primary card-footer-item" href="javascript:void(0);">
+                <a id="load-button" class="has-text-primary card-footer-item" href="javascript:void(0);">
                     <span class="icon">
                         <i class="fa-solid fa-folder-open"></i>
                     </span>
@@ -104,6 +104,48 @@
 
     </div>
 
+    <div id="save-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Save game</p>
+            </header>
+            <div class="modal-card-body">
+                <input id="save-input" class="input mb-2" type="text" placeholder="Save name">
+                <p style="text-align: right;">
+                    <button id="save-modal-save" class="button is-success">Save</button>
+                    <button id="save-modal-cancel" class="button">Cancel</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="load-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Load save</p>
+            </header>
+            <div class="modal-card-body">
+                <table class="table is-fullwidth is-hoverable is-striped">
+                    <thead>
+                        <tr>
+                            <th>Nb</th>
+                            <th>Save</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="saves-table">
+                    </tbody>
+                </table>
+                <p style="text-align: right;">
+                    <button id="load-modal-cancel" class="button">Cancel</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div id="reload-modal" class="modal">
         <div class="modal-background"></div>
         <div class="modal-card">
@@ -129,7 +171,7 @@
             <div class="modal-card-body">
                 Are you sure you want to restart?
                 <p style="text-align: right;">
-                    <button id="restart-modal-restart" class="button is-success">Yes</button>
+                    <button id="restart-modal-restart" class="button is-success">Restart</button>
                     <button id="restart-modal-cancel" class="button">Cancel</button>
                 </p>
             </div>

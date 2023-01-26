@@ -108,6 +108,14 @@ class GameSaves:
                 f"troubadour-load-{save.nb}",
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
+        run_js(
+            f"""
+const blob = new Blob([`{str(jsp.encode(self)).encode("unicode_escape").decode("utf-8")}`], {{type: 'text/json'}});
+const button = document.getElementById("load-modal-download");
+button.href = URL.createObjectURL(blob);
+button.download = "saves.json";
+        """
+        )
 
 
 def render_porthole(porthole: AbstractImagePanel) -> None:

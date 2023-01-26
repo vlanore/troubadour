@@ -104,6 +104,10 @@ class GameSaves:
                 f"troubadour-rmsave-{save.nb}",
                 lambda _, id=save.nb: delete_save(id),  # type:ignore
             )
+            onclick(
+                f"troubadour-load-{save.nb}",
+                lambda _, id=save.nb: load_save(id),  # type:ignore
+            )
 
 
 def render_porthole(porthole: AbstractImagePanel) -> None:
@@ -273,6 +277,15 @@ def delete_save(id: int) -> None:
     saves.render()
 
 
+def load_save(id: int) -> None:
+    saves = get_saves()
+    assert isinstance(saves, GameSaves)
+    save = next(save for save in saves.saves if save.nb == id)
+    js.localStorage.setItem("state", jsp.encode(save.save))
+    load_cache_data(None)
+    Element("load-modal").remove_class("is-active")
+
+
 def run_game(game: AbstractGame) -> None:
     # saves
     match get_saves():
@@ -355,7 +368,7 @@ def close_reload_modal(_: Any) -> None:
 
 
 def load_cache_data(_: Any) -> None:
-    state = jsp.decode(js.localStorage.getItem("state"))
+    state = get_state()
     assert isinstance(state, GameState)
 
     Element("story").element.innerHTML = ""

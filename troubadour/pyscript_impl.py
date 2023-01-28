@@ -27,6 +27,7 @@ from troubadour.interfaces import (
     TextInput,
 )
 from troubadour.troubadown import troubadownify
+import troubadour.html_render as html
 
 
 class InfoPanel(AbstractInfoPanel):
@@ -86,10 +87,10 @@ class GameSaves:
     saves: list[GameSave] = field(default_factory=list)
 
     def render(self) -> None:
-        Element("saves-table").element.innerHTML = ""
+        html.clear("saves-table")
         for save in self.saves:
-            Element("saves-table").element.insertAdjacentHTML(
-                "beforeend",
+            html.insert_end(
+                "saves-table",
                 f"""
             <tr>
                 <th>{save.nb}</th>
@@ -101,15 +102,15 @@ class GameSaves:
                 </th>
             </tr>""",
             )
-            onclick(
+            html.onclick(
                 f"troubadour-rmsave-{save.nb}",
                 lambda _, id=save.nb: delete_save(id),  # type:ignore
             )
-            onclick(
+            html.onclick(
                 f"troubadour-load-{save.nb}",
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
-        onclick("load-modal-import", lambda _: None)  # TODO
+        html.onclick("load-modal-import", lambda _: None)  # TODO
         run_js(
             f"""
 const blob = new Blob([`{str(jsp.encode(self)).encode("unicode_escape").decode("utf-8")}`], {{type: 'text/json'}});
@@ -136,31 +137,20 @@ button.download = "saves.json";
 
 
 def render_porthole(porthole: AbstractImagePanel) -> None:
-    Element("porthole").element.src = porthole.get_url()
-    Element("porthole").element.alt = porthole.get_alt()
+    html.set_src("porthole", porthole.get_url())
+    html.set_alt("porthole", porthole.get_alt())
 
 
 def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
     extra_raw, extra_md = extra.get_text()
     extra_html = mistune.html(extra_raw) if extra_md else extra_raw
-    Element("extra-content").element.innerHTML = extra_html
-    Element("extra-title").element.innerHTML = extra.get_title()
+    html.set_html("extra-content", extra_html)
+    html.set_html("extra-title", str(extra.get_title()))
 
     info_raw, info_md = info.get_text()
     info_html = mistune.html(info_raw) if info_md else info_raw
-    Element("info-content").element.innerHTML = info_html
-    Element("info-title").element.innerHTML = info.get_title()
-
-
-def render_tooltip(id: int, text: str) -> None:
-    run_js(
-        f"""tippy("#troubadour_tooltip_{id}",
-                {{
-                    content:"{text}",
-                    allowHTML:true,
-                }}
-            );"""
-    )
+    html.set_html("info-content", info_html)
+    html.set_html("info-title", str(info.get_title()))
 
 
 @dataclass
@@ -180,20 +170,20 @@ class Story(AbstractStory):
     ) -> None:
         self.history.insert(0, DisplayCmd(text, markdown, tooltips, named_tooltips))
 
-        html, tt_labels = troubadownify(text)
+        html_text, tt_labels = troubadownify(text)
 
         if markdown:
-            psdisplay(HTML(mistune.html(html)), target="story")
+            psdisplay(HTML(mistune.html(html_text)), target="story")
         else:
-            psdisplay(HTML(html), target="story")
+            psdisplay(HTML(html_text), target="story")
 
         if tooltips is not None:
             for i, tt in enumerate(tooltips):
-                render_tooltip(tt_labels[i], tt)
+                html.add_tooltip(tt_labels[i], tt)
 
         if named_tooltips is not None:
             for name, tt in named_tooltips.items():
-                render_tooltip(tt_labels[name], tt)
+                html.add_tooltip(tt_labels[name], tt)
 
         self._scroll_to_bottom()
 
@@ -237,7 +227,7 @@ def add_button(
             f'id="troubadour_button_{id}">{text}</button>'
         ),
     )
-    onclick(f"troubadour_button_{id}", continuation)
+    html.onclick(f"troubadour_button_{id}", continuation)
 
 
 def add_text_input(
@@ -268,7 +258,7 @@ def add_text_input(
             value = default_value
         continuation(value)
 
-    onclick(f"troubadour_inputtext_button_{id}", callback)
+    html.onclick(f"troubadour_inputtext_button_{id}", callback)
 
 
 def get_state() -> Optional[GameState]:
@@ -320,13 +310,9 @@ def run_page(game: AbstractGame, method: str, **args: Any) -> None:
     interface = getattr(game, method)(**args)
     render_panels(game.info, game.extra)
     render_porthole(game.porthole)
-    Element("story-interface").element.innerHTML = ""
+    html.clear("story-interface")
     render_interface(game, interface)
     js.localStorage.setItem("state", jsp.encode(GameState(game, interface, LIGHT_MODE)))
-
-
-def onclick(id: str, func: Callable[[Any], None]) -> None:
-    Element(id).element.addEventListener("click", create_proxy(func))
 
 
 def save_game() -> None:
@@ -368,36 +354,38 @@ def run_game(game: AbstractGame) -> None:
         case GameSaves() as saves:
             saves.render()
 
-    onclick("load-button", lambda _: Element("load-modal").add_class("is-active"))
-    onclick(
+    html.onclick("load-button", lambda _: Element("load-modal").add_class("is-active"))
+    html.onclick(
         "load-modal-cancel", lambda _: Element("load-modal").remove_class("is-active")
     )
-    onclick("save-button", lambda _: Element("save-modal").add_class("is-active"))
-    onclick("save-modal-save", lambda _: save_game())
-    onclick(
+    html.onclick("save-button", lambda _: Element("save-modal").add_class("is-active"))
+    html.onclick("save-modal-save", lambda _: save_game())
+    html.onclick(
         "save-modal-cancel", lambda _: Element("save-modal").remove_class("is-active")
     )
 
     # dark mode
-    onclick("dark-mode-toggle", toggle_mode)
+    html.onclick("dark-mode-toggle", toggle_mode)
 
     # reload modal
     def restart(_: Any) -> None:
         run_page(game, "start")
         close_reload_modal(None)
 
-    onclick("reload-modal-restart", restart)
-    onclick("reload-modal-load", load_cache_data)
+    html.onclick("reload-modal-restart", restart)
+    html.onclick("reload-modal-load", load_cache_data)
 
     # restart button
     def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
-        Element("story").element.innerHTML = ""
+        html.clear("story")
         run_page(deepcopy(new_game), "start")
         Element("restart-modal").remove_class("is-active")
 
-    onclick("restart-button", lambda _: Element("restart-modal").add_class("is-active"))
-    onclick("restart-modal-restart", restart2)
-    onclick(
+    html.onclick(
+        "restart-button", lambda _: Element("restart-modal").add_class("is-active")
+    )
+    html.onclick("restart-modal-restart", restart2)
+    html.onclick(
         "restart-modal-cancel",
         lambda _: Element("restart-modal").remove_class("is-active"),
     )
@@ -445,7 +433,7 @@ def load_cache_data(_: Any) -> None:
     state = get_state()
     assert isinstance(state, GameState)
 
-    Element("story").element.innerHTML = ""
+    html.clear("story")
     old_history = state.game.story.history.copy()
     state.game.story.history = []
     for cmd in reversed(old_history):
@@ -462,7 +450,7 @@ def load_cache_data(_: Any) -> None:
     render_panels(state.game.info, state.game.extra)
     render_porthole(state.game.porthole)
 
-    Element("story-interface").element.innerHTML = ""
+    html.clear("story-interface")
     render_interface(state.game, state.interface)
 
     close_reload_modal(None)

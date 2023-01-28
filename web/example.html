@@ -106,12 +106,12 @@
 
     <div id="save-modal" class="modal">
         <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Save game</p>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Save game</p>
             </header>
-            <div class="modal-card-body">
-                <input id="save-input" class="input mb-2" type="text" placeholder="Save name">
+            <div class="card-content">
+                <input id="save-input" class="input mb-5" type="text" placeholder="Save name" style="min-width: 300px;">
                 <p style="text-align: right;">
                     <button id="save-modal-save" class="button is-success">Save</button>
                     <button id="save-modal-cancel" class="button">Cancel</button>
@@ -122,11 +122,11 @@
 
     <div id="load-modal" class="modal">
         <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Load save</p>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Load save</p>
             </header>
-            <div class="modal-card-body">
+            <div class="card-content" style="min-width: 700px;">
                 <table class="table is-fullwidth is-hoverable is-striped">
                     <thead>
                         <tr>
@@ -150,15 +150,15 @@
 
     <div id="resume-modal" class="modal">
         <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Game data detected</p>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Game data detected</p>
             </header>
-            <div class="modal-card-body">
-                Do you want to resume your previous session?
+            <div class="card-content">
+                <p class="mb-5">Do you want to resume your previous session?</p>
                 <p style="text-align: right;">
-                    <button id="resume-modal-load" class="button is-success">Load</button>
-                    <button id="resume-modal-restart" class="button">Resume</button>
+                    <button id="resume-modal-load" class="button is-success">Resume</button>
+                    <button id="resume-modal-restart" class="button">Cancel</button>
                 </p>
             </div>
         </div>
@@ -166,12 +166,12 @@
 
     <div id="restart-modal" class="modal">
         <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Restart</p>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Restart</p>
             </header>
-            <div class="modal-card-body">
-                Are you sure you want to restart?
+            <div class="card-content">
+                <p class="mb-5">Are you sure you want to restart?</p>
                 <p style="text-align: right;">
                     <button id="restart-modal-restart" class="button is-success">Restart</button>
                     <button id="restart-modal-cancel" class="button">Cancel</button>
@@ -182,13 +182,13 @@
 
     <div id="python-modal" class="modal">
         <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">Python terminal</p>
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">Python terminal</p>
             </header>
-            <div class="modal-card-body">
-                <py-terminal></py-terminal>
-                <py-repl></py-repl>
+            <div class="card-content" style="min-width: 700px;">
+                <py-terminal class="mb-3" style="display: block;"></py-terminal>
+                <py-repl class="mb-5" style="display: block;"></py-repl>
                 <p style="text-align: right;">
                     <button id="python-modal-cancel" class="button">Cancel</button>
                 </p>

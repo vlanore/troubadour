@@ -390,6 +390,15 @@ def run_game(game: AbstractGame) -> None:
         lambda _: Element("restart-modal").remove_class("is-active"),
     )
 
+    # python terminal
+    html.onclick(
+        "python-button", lambda _: Element("python-modal").add_class("is-active")
+    )
+    html.onclick(
+        "python-modal-cancel",
+        lambda _: Element("python-modal").remove_class("is-active"),
+    )
+
     # start game
     match get_state():
         case None:

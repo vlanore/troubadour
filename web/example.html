@@ -68,7 +68,7 @@
                         <i class="fa-solid fa-folder-open"></i>
                     </span>
                 </a>
-                <a class="has-text-primary card-footer-item" href="javascript:void(0);">
+                <a id="python-button" class="has-text-primary card-footer-item" href="javascript:void(0);">
                     <span class="icon">
                         <i class="fa-brands fa-python"></i>
                     </span>
@@ -180,6 +180,23 @@
         </div>
     </div>
 
+    <div id="python-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Python terminal</p>
+            </header>
+            <div class="modal-card-body">
+                <py-terminal></py-terminal>
+                <py-repl></py-repl>
+                <p style="text-align: right;">
+                    <button id="python-modal-cancel" class="button">Cancel</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
     <!-- tippy -->
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
@@ -194,6 +211,7 @@
         "troubadour/troubadown.py", "troubadour/id.py", "troubadour/html_render.py" ]
     </py-config>
     <py-script src="../troubadour/example.py" />
+
 
 </body>
 

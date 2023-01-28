@@ -118,3 +118,8 @@ html {
 .textinput-text {
     flex-grow: 1;
 }
+
+.py-terminal {
+    max-height: 40wh;
+    overflow-y: auto;
+}

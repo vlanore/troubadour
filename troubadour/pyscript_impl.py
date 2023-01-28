@@ -1,7 +1,7 @@
 from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, Callable, Any
+from typing import Any, Callable, Optional
 
 import jsonpickle as jsp
 import mistune
@@ -9,9 +9,10 @@ from pyodide.code import run_js  # type: ignore
 from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import HTML  # type: ignore
 from pyscript import Element  # type: ignore
-from pyscript import display as psdisplay  # type: ignore
 from pyscript import js  # type: ignore
+from pyscript import display as psdisplay  # type: ignore
 
+from troubadour.id import get_id
 from troubadour.interfaces import (
     AbstractGame,
     AbstractImagePanel,
@@ -19,13 +20,13 @@ from troubadour.interfaces import (
     AbstractInterface,
     AbstractStory,
     Button,
-    ImageCmd,
-    DisplayCmd,
-    NewPageCmd,
     Cmd,
+    DisplayCmd,
+    ImageCmd,
+    NewPageCmd,
+    TextInput,
 )
 from troubadour.troubadown import troubadownify
-from troubadour.id import get_id
 
 
 class InfoPanel(AbstractInfoPanel):
@@ -239,6 +240,37 @@ def add_button(
     onclick(f"troubadour_button_{id}", continuation)
 
 
+def add_text_input(
+    continuation: Callable[[str], None],
+    button_text: str,
+    default_value: str = "",
+    placeholder_text: str = "",
+) -> None:
+    id = get_id()
+    Element("story-interface").element.insertAdjacentHTML(
+        "beforeend",
+        f"""
+        <div class="field has-addons">
+            <div class="control is-flex-grow-1">
+                <input id="troubadour_inputtext_input_{id}" class="input" type="text" placeholder="{placeholder_text}">
+            </div>
+            <div class="control">
+                <a id="troubadour_inputtext_button_{id}" class="button">
+                    {button_text}
+                </a>
+            </div>
+        </div>""",
+    )
+
+    def callback(_: Any) -> None:
+        value: str = Element(f"troubadour_inputtext_input_{id}").element.value
+        if value == "":
+            value = default_value
+        continuation(value)
+
+    onclick(f"troubadour_inputtext_button_{id}", callback)
+
+
 def get_state() -> Optional[GameState]:
     encoded_state = js.localStorage.getItem("state")
     if encoded_state is not None:
@@ -259,8 +291,8 @@ def get_saves() -> Optional[GameSaves]:
         return None
 
 
-def run_page(game: AbstractGame, method: str) -> None:
-    interface = getattr(game, method)()
+def run_page(game: AbstractGame, method: str, **args: Any) -> None:
+    interface = getattr(game, method)(**args)
     render_panels(game.info, game.extra)
     render_porthole(game.porthole)
     Element("story-interface").element.innerHTML = ""
@@ -268,7 +300,21 @@ def run_page(game: AbstractGame, method: str) -> None:
         match element:
             case Button(text, _method, tooltip):  # type:ignore
                 add_button(
-                    text, lambda _, _method=_method: run_page(game, _method), tooltip
+                    text,
+                    lambda _, _method=_method: run_page(game, _method),
+                    tooltip,
+                )
+            case TextInput(  # type:ignore
+                button_text=button_text,
+                method=method,
+                default_value=default_value,
+                placeholder_text=placeholder_text,
+            ):
+                add_text_input(
+                    lambda v, _method=method: run_page(game, _method, msg=v),
+                    button_text,
+                    default_value,
+                    placeholder_text,
                 )
             case _:
                 raise NotImplementedError()
@@ -420,6 +466,18 @@ def load_cache_data(_: Any) -> None:
                     text,
                     lambda _, _method=_method: run_page(state.game, _method),
                     tooltip,
+                )
+            case TextInput(  # type:ignore
+                button_text=button_text,
+                method=method,
+                default_value=default_value,
+                placeholder_text=placeholder_text,
+            ):
+                add_text_input(
+                    lambda v, _method=method: run_page(state.game, _method, msg=v),
+                    button_text,
+                    default_value,
+                    placeholder_text,
                 )
             case _:
                 raise NotImplementedError()

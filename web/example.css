@@ -109,6 +109,12 @@ html {
     gap: 1em;
 }
 
-#story-interface>.button {
+#story-interface>.button,
+#story-interface>.field {
+    flex-grow: 1;
+    flex-basis: 0px;
+}
+
+.textinput-text {
     flex-grow: 1;
 }

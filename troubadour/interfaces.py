@@ -86,3 +86,11 @@ class Button(AbstractInterface):
     text: str
     method: str
     tooltip: str = ""
+
+
+@dataclass
+class TextInput(AbstractInterface):
+    button_text: str
+    method: str
+    default_value: str = ""
+    placeholder_text: str = ""

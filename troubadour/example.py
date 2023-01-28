@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from troubadour.interfaces import Button, AbstractGame, AbstractInterface
+from troubadour.interfaces import Button, AbstractGame, AbstractInterface, TextInput
 from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel
 
 
@@ -53,6 +53,14 @@ situation? Are we |?red:doomed|?
     def pouac(self) -> list[AbstractInterface]:
         self.story.newpage()
         self.story.display("Hello world\n\nSo great")
+        return [
+            Button("Pouac", "pouac"),
+            TextInput("Send", "pouec", "hello world", "Type some random thing here"),
+        ]
+
+    def pouec(self, msg: str) -> list[AbstractInterface]:
+        self.story.newpage()
+        self.story.display(f"This is the message: {msg}")
         return [
             Button("Pouac", "pouac"),
             Button("Pouic", "pouic"),

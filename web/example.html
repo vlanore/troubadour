@@ -52,7 +52,9 @@
         </div>
 
         <div id="story-container">
-            <div id="story" class="content"></div>
+            <div class="scroll-container">
+                <div id="story" class="content scroll-content"></div>
+            </div>
             <div id="story-interface"></div>
         </div>
 
@@ -187,7 +189,9 @@
                 <p class="card-header-title">Python terminal</p>
             </header>
             <div class="card-content" style="min-width: 700px;">
-                <py-terminal class="mb-3" style="display: block;"></py-terminal>
+                <div class="scroll-container" style="height: 50vh; margin-bottom: 1em;">
+                    <py-terminal class="scroll-content"></py-terminal>
+                </div>
                 <py-repl class="mb-5" style="display: block;"></py-repl>
                 <p style="text-align: right;">
                     <button id="python-modal-cancel" class="button">Cancel</button>

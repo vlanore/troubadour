@@ -39,9 +39,21 @@ html {
     padding-right: 0;
 }
 
+#story-container>.scroll-container {
+    flex: 1 0 0px;
+    margin-bottom: 1em;
+}
+
+.scroll-container {
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+}
+
+.scroll-content {
+    scroll-snap-align: end;
+}
+
 #story {
-    flex: 1 0;
-    overflow-y: scroll;
     padding: 10px;
 }
 
@@ -60,26 +72,26 @@ html {
     margin-bottom: 1em;
 }
 
-#story::-webkit-scrollbar {
+#story-container>.scroll-container::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 
-#story::-webkit-scrollbar-track {
+#story-container>.scroll-container::-webkit-scrollbar-track {
     background: none;
 }
 
-#story::-webkit-scrollbar-thumb {
+#story-container>.scroll-container::-webkit-scrollbar-thumb {
     background: #ddd;
     border-radius: 5px;
     visibility: hidden;
 }
 
-.dark-mode#story::-webkit-scrollbar-thumb {
+.dark-mode#story-container>.scroll-container::-webkit-scrollbar-thumb {
     background: rgb(55, 55, 55);
 }
 
-#story:hover::-webkit-scrollbar-thumb {
+#story-container>.scroll-container:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
 
@@ -120,6 +132,6 @@ html {
 }
 
 .py-terminal {
-    max-height: 40wh;
-    overflow-y: auto;
+    min-height: 50vh;
+    display: block;
 }

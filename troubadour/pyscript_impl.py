@@ -185,13 +185,10 @@ class Story(AbstractStory):
             for name, tt in named_tooltips.items():
                 html.add_tooltip(tt_labels[name], tt)
 
-        self._scroll_to_bottom()
-
     def newpage(self) -> None:
         self.history.insert(0, NewPageCmd())
         t = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         psdisplay(HTML(f'<div class="divider">{t}</div>'), target="story")
-        self._scroll_to_bottom()
 
     def image(self, url: str, alt: str) -> None:
         self.history.insert(0, ImageCmd(url, alt))
@@ -207,12 +204,6 @@ class Story(AbstractStory):
             </div>"""
             ),
             target="story",
-        )
-
-        stb = lambda _: self._scroll_to_bottom()
-
-        Element(f"troubadour_image_{id}").element.addEventListener(
-            "load", create_proxy(stb)
         )
 
 
@@ -417,14 +408,14 @@ def toggle_mode(_: Any) -> None:
     if LIGHT_MODE == "dark":
         Element("dark-style").element.disabled = "disabled"
         Element("light-style").element.disabled = None
-        Element("story").remove_class("dark-mode")
+        Element("story-container").remove_class("dark-mode")
         LIGHT_MODE = "light"
         Element("dark-mode-icon").remove_class("fa-sun")
         Element("dark-mode-icon").add_class("fa-moon")
     elif LIGHT_MODE == "light":
         Element("dark-style").element.disabled = None
         Element("light-style").element.disabled = "disabled"
-        Element("story").add_class("dark-mode")
+        Element("story-container").add_class("dark-mode")
         LIGHT_MODE = "dark"
         Element("dark-mode-icon").remove_class("fa-moon")
         Element("dark-mode-icon").add_class("fa-sun")

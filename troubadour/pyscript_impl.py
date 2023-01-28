@@ -291,11 +291,7 @@ def get_saves() -> Optional[GameSaves]:
         return None
 
 
-def run_page(game: AbstractGame, method: str, **args: Any) -> None:
-    interface = getattr(game, method)(**args)
-    render_panels(game.info, game.extra)
-    render_porthole(game.porthole)
-    Element("story-interface").element.innerHTML = ""
+def render_interface(game: AbstractGame, interface: list[AbstractInterface]) -> None:
     for element in interface:
         match element:
             case Button(text, _method, tooltip):  # type:ignore
@@ -318,6 +314,14 @@ def run_page(game: AbstractGame, method: str, **args: Any) -> None:
                 )
             case _:
                 raise NotImplementedError()
+
+
+def run_page(game: AbstractGame, method: str, **args: Any) -> None:
+    interface = getattr(game, method)(**args)
+    render_panels(game.info, game.extra)
+    render_porthole(game.porthole)
+    Element("story-interface").element.innerHTML = ""
+    render_interface(game, interface)
     js.localStorage.setItem("state", jsp.encode(GameState(game, interface, LIGHT_MODE)))
 
 
@@ -459,28 +463,7 @@ def load_cache_data(_: Any) -> None:
     render_porthole(state.game.porthole)
 
     Element("story-interface").element.innerHTML = ""
-    for element in state.interface:
-        match element:
-            case Button(text, _method, tooltip):  # type:ignore
-                add_button(
-                    text,
-                    lambda _, _method=_method: run_page(state.game, _method),
-                    tooltip,
-                )
-            case TextInput(  # type:ignore
-                button_text=button_text,
-                method=method,
-                default_value=default_value,
-                placeholder_text=placeholder_text,
-            ):
-                add_text_input(
-                    lambda v, _method=method: run_page(state.game, _method, msg=v),
-                    button_text,
-                    default_value,
-                    placeholder_text,
-                )
-            case _:
-                raise NotImplementedError()
+    render_interface(state.game, state.interface)
 
     close_reload_modal(None)
 

@@ -367,13 +367,13 @@ def run_game(game: AbstractGame) -> None:
     # dark mode
     html.onclick("dark-mode-toggle", toggle_mode)
 
-    # reload modal
+    # resume modal
     def restart(_: Any) -> None:
         run_page(game, "start")
-        close_reload_modal(None)
+        close_resume_modal(None)
 
-    html.onclick("reload-modal-restart", restart)
-    html.onclick("reload-modal-load", load_cache_data)
+    html.onclick("resume-modal-restart", restart)
+    html.onclick("resume-modal-load", load_cache_data)
 
     # restart button
     def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
@@ -406,7 +406,7 @@ def run_game(game: AbstractGame) -> None:
         case GameState(color_mode=color_mode):
             if color_mode == "dark":
                 toggle_mode(None)
-            Element("reload-modal").add_class("is-active")
+            Element("resume-modal").add_class("is-active")
 
 
 LIGHT_MODE = "light"
@@ -434,8 +434,8 @@ def toggle_mode(_: Any) -> None:
     js.localStorage.setItem("state", jsp.encode(state))
 
 
-def close_reload_modal(_: Any) -> None:
-    Element("reload-modal").remove_class("is-active")
+def close_resume_modal(_: Any) -> None:
+    Element("resume-modal").remove_class("is-active")
 
 
 def load_cache_data(_: Any) -> None:
@@ -462,7 +462,7 @@ def load_cache_data(_: Any) -> None:
     html.clear("story-interface")
     render_interface(state.game, state.interface)
 
-    close_reload_modal(None)
+    close_resume_modal(None)
 
 
 if __name__ == "__main__":

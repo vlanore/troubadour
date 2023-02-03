@@ -113,3 +113,7 @@ button.download = "{filename}";
         """
     )
     # FIXME revoke url
+
+
+def display_story(text: str) -> None:
+    psdisplay(HTML(text), target="story")

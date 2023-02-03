@@ -5,8 +5,6 @@ from typing import Any, Callable, Optional
 
 import jsonpickle as jsp
 import mistune
-from pyscript import HTML  # type: ignore
-from pyscript import display as psdisplay  # type: ignore
 
 from troubadour.id import get_id
 from troubadour.interfaces import (
@@ -163,9 +161,9 @@ class Story(AbstractStory):
         html_text, tt_labels = troubadownify(text)
 
         if markdown:
-            psdisplay(HTML(mistune.html(html_text)), target="story")
+            psr.display_story(mistune.html(html_text))
         else:
-            psdisplay(HTML(html_text), target="story")
+            psr.display_story(html_text)
 
         if tooltips is not None:
             for i, tt in enumerate(tooltips):
@@ -178,22 +176,19 @@ class Story(AbstractStory):
     def newpage(self) -> None:
         self.history.insert(0, NewPageCmd())
         t = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-        psdisplay(HTML(f'<div class="divider">{t}</div>'), target="story")
+        psr.display_story(f'<div class="divider">{t}</div>')
 
     def image(self, url: str, alt: str) -> None:
         self.history.insert(0, ImageCmd(url, alt))
         id = get_id()
-        psdisplay(
-            HTML(
-                f"""<div class="card">
+        psr.display_story(
+            f"""<div class="card">
                 <div class="card-image">
                     <figure class="image">
                     <img id="troubadour_image_{id}" src="{url}" alt="{alt}">
                     </figure>
                 </div>
             </div>"""
-            ),
-            target="story",
         )
 
 

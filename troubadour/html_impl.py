@@ -5,7 +5,6 @@ from typing import Any, Callable, Optional
 
 import jsonpickle as jsp
 import mistune
-from pyodide.code import run_js  # type: ignore
 from pyscript import HTML  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
 
@@ -108,15 +107,7 @@ class GameSaves:
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
         psr.onclick("load-modal-import", lambda _: None)  # TODO
-        run_js(
-            f"""
-const blob = new Blob([`{str(jsp.encode(self)).encode("unicode_escape").decode("utf-8")}`], {{type: 'text/json'}});
-const button = document.getElementById("load-modal-download");
-button.href = URL.createObjectURL(blob);
-button.download = "saves.json";
-        """
-        )
-        # FIXME revoke url
+        psr.file_download_button("load-modal-download", str(jsp.encode(self)))
 
     def get_next_id(self) -> int:
         if self.saves == []:

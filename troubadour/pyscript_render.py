@@ -81,3 +81,15 @@ class LocalStorage:
 
 
 local_storage = LocalStorage()
+
+
+def file_download_button(id: str, content: str) -> None:
+    run_js(
+        f"""
+const blob = new Blob([`{content.encode("unicode_escape").decode("utf-8")}`], {{type: 'text/json'}});
+const button = document.getElementById({id});
+button.href = URL.createObjectURL(blob);
+button.download = "saves.json";
+        """
+    )
+    # FIXME revoke url

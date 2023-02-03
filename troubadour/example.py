@@ -1,17 +1,17 @@
 from dataclasses import dataclass, field
 
-from troubadour.interfaces import Button, AbstractGame, AbstractInterface, TextInput
+from troubadour.interfaces import Button, Game, Input, TextInput
 from troubadour.html_impl import Story, InfoPanel, run_game, ImagePanel
 
 
 @dataclass
-class MyGame(AbstractGame):
+class MyGame(Game):
     story: Story = field(default_factory=Story)
     info: InfoPanel = field(default_factory=InfoPanel)
     extra: InfoPanel = field(default_factory=InfoPanel)
     porthole: ImagePanel = field(default_factory=ImagePanel)
 
-    def start(self) -> list[AbstractInterface]:
+    def start(self) -> list[Input]:
         self.porthole.set_url("https://picsum.photos/300/350")
         self.info.set_title("Informazion")
         self.info.set_text("str: **4**\n\nagi: **2**\n\nint: **3**")
@@ -44,13 +44,13 @@ situation? Are we |?red:doomed|?
 
         return [Button("Click me", "pouac")]
 
-    def pouic(self) -> list[AbstractInterface]:
+    def pouic(self) -> list[Input]:
         self.story.newpage()
         self.story.display("Hello")
         self.story.image("https://picsum.photos/800/150", "image")
         return [Button("Pouac all the way", "pouac")]
 
-    def pouac(self) -> list[AbstractInterface]:
+    def pouac(self) -> list[Input]:
         self.story.newpage()
         self.story.display("Hello world\n\nSo great")
         return [
@@ -58,7 +58,7 @@ situation? Are we |?red:doomed|?
             TextInput("Send", "pouec", "hello world", "Type some random thing here"),
         ]
 
-    def pouec(self, msg: str) -> list[AbstractInterface]:
+    def pouec(self, msg: str) -> list[Input]:
         self.story.newpage()
         self.story.display(f"This is the message: {msg}")
         return [

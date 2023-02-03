@@ -24,7 +24,7 @@ class ImageCmd:
 Cmd = DisplayCmd | NewPageCmd | ImageCmd
 
 
-class AbstractStory(Protocol):
+class Story(Protocol):
     history: list[Cmd]
 
     @abstractmethod
@@ -46,7 +46,7 @@ class AbstractStory(Protocol):
         pass
 
 
-class AbstractInfoPanel(Protocol):
+class InfoPanel(Protocol):
     def get_title(self) -> Optional[str]:
         return ""
 
@@ -55,7 +55,7 @@ class AbstractInfoPanel(Protocol):
         pass
 
 
-class AbstractImagePanel(Protocol):
+class ImagePanel(Protocol):
     @abstractmethod
     def get_url(self) -> str:
         pass
@@ -65,31 +65,31 @@ class AbstractImagePanel(Protocol):
         pass
 
 
-class AbstractInterface(Protocol):
+class Input:
     pass
 
 
 @runtime_checkable
-class AbstractGame(Protocol):
-    story: AbstractStory
-    info: AbstractInfoPanel
-    extra: AbstractInfoPanel
-    porthole: AbstractImagePanel
+class Game(Protocol):
+    story: Story
+    info: InfoPanel
+    extra: InfoPanel
+    porthole: ImagePanel
 
     @abstractmethod
-    def start(self) -> list[AbstractInterface]:
+    def start(self) -> list[Input]:
         pass
 
 
 @dataclass
-class Button(AbstractInterface):
+class Button(Input):
     text: str
     method: str
     tooltip: str = ""
 
 
 @dataclass
-class TextInput(AbstractInterface):
+class TextInput(Input):
     button_text: str
     method: str
     default_value: str = ""

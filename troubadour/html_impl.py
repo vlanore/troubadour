@@ -7,24 +7,12 @@ import jsonpickle as jsp
 import mistune
 
 from troubadour.id import get_id
-from troubadour.interfaces import (
-    AbstractGame,
-    AbstractImagePanel,
-    AbstractInfoPanel,
-    AbstractInterface,
-    AbstractStory,
-    Button,
-    Cmd,
-    DisplayCmd,
-    ImageCmd,
-    NewPageCmd,
-    TextInput,
-)
+import troubadour.interfaces as itf
 from troubadour.troubadown import troubadownify
 import troubadour.pyscript_render as psr
 
 
-class InfoPanel(AbstractInfoPanel):
+class InfoPanel(itf.InfoPanel):
     def __init__(self) -> None:
         self.title: Optional[str] = None
         self.text = ""
@@ -43,7 +31,7 @@ class InfoPanel(AbstractInfoPanel):
         return self.text, self.markdown
 
 
-class ImagePanel(AbstractImagePanel):
+class ImagePanel(itf.ImagePanel):
     def __init__(self) -> None:
         self.url = ""
         self.alt = ""
@@ -63,8 +51,8 @@ class ImagePanel(AbstractImagePanel):
 
 @dataclass
 class GameState:
-    game: AbstractGame
-    interface: list[AbstractInterface]
+    game: itf.Game
+    interface: list[itf.Input]
     color_mode: str
 
 
@@ -124,12 +112,12 @@ class GameSaves:
                 self.saves.append(save)
 
 
-def render_porthole(porthole: AbstractImagePanel) -> None:
+def render_porthole(porthole: itf.ImagePanel) -> None:
     psr.set_src("porthole", porthole.get_url())
     psr.set_alt("porthole", porthole.get_alt())
 
 
-def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
+def render_panels(info: itf.InfoPanel, extra: itf.InfoPanel) -> None:
     extra_raw, extra_md = extra.get_text()
     extra_html = mistune.html(extra_raw) if extra_md else extra_raw
     psr.set_html("extra-content", extra_html)
@@ -142,8 +130,8 @@ def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
 
 
 @dataclass
-class Story(AbstractStory):
-    history: list[Cmd] = field(default_factory=list)
+class Story(itf.Story):
+    history: list[itf.Cmd] = field(default_factory=list)
 
     # def _scroll_to_bottom(self) -> None:
     #     tgt = Element("story").element
@@ -156,7 +144,7 @@ class Story(AbstractStory):
         tooltips: Optional[list[str]] = None,
         named_tooltips: Optional[dict[str, str]] = None,
     ) -> None:
-        self.history.insert(0, DisplayCmd(text, markdown, tooltips, named_tooltips))
+        self.history.insert(0, itf.DisplayCmd(text, markdown, tooltips, named_tooltips))
 
         html_text, tt_labels = troubadownify(text)
 
@@ -174,12 +162,12 @@ class Story(AbstractStory):
                 psr.add_tooltip(tt_labels[name], tt)
 
     def newpage(self) -> None:
-        self.history.insert(0, NewPageCmd())
+        self.history.insert(0, itf.NewPageCmd())
         t = datetime.today().strftime("%Y-%m-%d %H:%M:%S")
         psr.display_story(f'<div class="divider">{t}</div>')
 
     def image(self, url: str, alt: str) -> None:
-        self.history.insert(0, ImageCmd(url, alt))
+        self.history.insert(0, itf.ImageCmd(url, alt))
         id = get_id()
         psr.display_story(
             f"""<div class="card">
@@ -245,23 +233,23 @@ def get_saves() -> Optional[GameSaves]:
     return psr.local_storage(GameSaves)["saves"]
 
 
-def render_interface(game: AbstractGame, interface: list[AbstractInterface]) -> None:
+def render_interface(game: itf.Game, interface: list[itf.Input]) -> None:
     for element in interface:
         match element:
-            case Button(text, _method, tooltip):  # type:ignore
+            case itf.Button(text, _method, tooltip):
                 add_button(
                     text,
                     lambda _, _method=_method: run_page(game, _method),
                     tooltip,
                 )
-            case TextInput(  # type:ignore
+            case itf.TextInput(
                 button_text=button_text,
                 method=method,
                 default_value=default_value,
                 placeholder_text=placeholder_text,
             ):
                 add_text_input(
-                    lambda v, _method=method: run_page(game, _method, msg=v),
+                    lambda v, _m=method: run_page(game, _m, msg=v),  # type:ignore
                     button_text,
                     default_value,
                     placeholder_text,
@@ -270,7 +258,7 @@ def render_interface(game: AbstractGame, interface: list[AbstractInterface]) -> 
                 raise NotImplementedError()
 
 
-def run_page(game: AbstractGame, method: str, **args: Any) -> None:
+def run_page(game: itf.Game, method: str, **args: Any) -> None:
     interface = getattr(game, method)(**args)
     render_panels(game.info, game.extra)
     render_porthole(game.porthole)
@@ -310,7 +298,7 @@ def load_save(id: int) -> None:
     psr.remove_class("load-modal", "is-active")
 
 
-def run_game(game: AbstractGame) -> None:
+def run_game(game: itf.Game) -> None:
     # saves
     match get_saves():
         case None:
@@ -336,7 +324,7 @@ def run_game(game: AbstractGame) -> None:
     psr.onclick("resume-modal-load", load_cache_data)
 
     # restart button
-    def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
+    def restart2(_: Any, new_game: itf.Game = deepcopy(game)) -> None:
         psr.clear("story")
         run_page(deepcopy(new_game), "start")
         psr.deactivate_modal("restart-modal")
@@ -403,11 +391,11 @@ def load_cache_data(_: Any) -> None:
     state.game.story.history = []
     for cmd in reversed(old_history):
         match cmd:
-            case DisplayCmd(text, markdown, tooltips, named_tooltips):  # type:ignore
+            case itf.DisplayCmd(text, markdown, tooltips, named_tooltips):
                 state.game.story.display(text, markdown, tooltips, named_tooltips)
-            case NewPageCmd():  # type:ignore
+            case itf.NewPageCmd():
                 state.game.story.newpage()
-            case ImageCmd(url, alt):  # type:ignore
+            case itf.ImageCmd(url, alt):
                 state.game.story.image(url, alt)
             case _:
                 raise NotImplementedError()

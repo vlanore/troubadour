@@ -2,6 +2,7 @@ import re
 
 from troubadour.id import get_id
 
+
 # FIXME are we using the labels?
 def troubadownify(input: str) -> tuple[str, dict[str | int, int]]:
     """Parses troubadown markup in input string. Returns HTML output (with classes) and

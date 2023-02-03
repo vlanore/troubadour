@@ -74,15 +74,15 @@ class GameSaves:
             psr.insert_end(
                 "saves-table",
                 f"""
-            <tr>
-                <th>{save.nb}</th>
-                <th>{save.name}</th>
-                <th>{save.date.strftime("%Y-%m-%d %H:%M")}</th>
-                <th>
-                    <a id="troubadour-load-{save.nb}" href="javascript:void(0);">Load</a> -
-                    <a id="troubadour-rmsave-{save.nb}" href="javascript:void(0);">Delete</a>
-                </th>
-            </tr>""",
+<tr>
+    <th>{save.nb}</th>
+    <th>{save.name}</th>
+    <th>{save.date.strftime("%Y-%m-%d %H:%M")}</th>
+    <th>
+        <a id="troubadour-load-{save.nb}" href="javascript:void(0);">Load</a> -
+        <a id="troubadour-rmsave-{save.nb}" href="javascript:void(0);">Delete</a>
+    </th>
+</tr>""",
             )
             psr.onclick(
                 f"troubadour-rmsave-{save.nb}",
@@ -206,7 +206,8 @@ def add_text_input(
         f"""
         <div class="field has-addons">
             <div class="control is-flex-grow-1">
-                <input id="troubadour_inputtext_input_{id}" class="input" type="text" placeholder="{placeholder_text}">
+                <input id="troubadour_inputtext_input_{id}"
+                    class="input" type="text" placeholder="{placeholder_text}">
             </div>
             <div class="control">
                 <a id="troubadour_inputtext_button_{id}" class="button">

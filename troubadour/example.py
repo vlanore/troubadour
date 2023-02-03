@@ -19,7 +19,7 @@ class MyGame(Game):
         self.extra.set_text("things\n\nthings\n\nthings\n\nthings\n\nthings\n\nthangs")
 
         self.story.display(
-            f"""
+            """
 # Markdown test
 
 This is a test of the **markdown capabilities** of the thing.

@@ -243,23 +243,11 @@ def add_text_input(
 
 
 def get_state() -> Optional[GameState]:
-    encoded_state = psr.local_storage["state"]
-    if encoded_state is not None:
-        state = jsp.decode(encoded_state)
-        assert isinstance(state, GameState)
-        return state
-    else:
-        return None
+    return psr.local_storage(GameState)["state"]
 
 
 def get_saves() -> Optional[GameSaves]:
-    encoded_saves = psr.local_storage["saves"]
-    if encoded_saves is not None:
-        saves = jsp.decode(encoded_saves)
-        assert isinstance(saves, GameSaves)
-        return saves
-    else:
-        return None
+    return psr.local_storage(GameSaves)["saves"]
 
 
 def render_interface(game: AbstractGame, interface: list[AbstractInterface]) -> None:

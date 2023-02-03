@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, TypeVar, Generic, Type
 
 import jsonpickle as jsp
 from pyodide.code import run_js  # type: ignore
@@ -72,9 +72,32 @@ def enable(id: str) -> None:
     Element(id).element.disabled = None
 
 
+T = TypeVar("T")
+
+
 class LocalStorage:
     def __getitem__(self, key: str) -> Optional[str]:
         return js.localStorage.getItem(key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        js.localStorage.setItem(key, jsp.encode(value))
+
+    def __call__(self, cls: Type[T]) -> "TypedLocalStorage[T]":
+        return TypedLocalStorage(cls)
+
+
+class TypedLocalStorage(Generic[T]):
+    def __init__(self, cls: Type[T]) -> None:
+        self.cls = cls
+
+    def __getitem__(self, key: str) -> Optional[T]:
+        result = js.localStorage.getItem(key)
+        if result is not None:
+            decoded_result = jsp.decode(result)
+            assert isinstance(decoded_result, self.cls)
+            return decoded_result
+        else:
+            return None
 
     def __setitem__(self, key: str, value: Any) -> None:
         js.localStorage.setItem(key, jsp.encode(value))

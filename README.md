@@ -1,5 +1,7 @@
 # Troubadour
 
+[![Pylint](https://github.com/vlanore/troubadour/actions/workflows/linting.yml/badge.svg)](https://github.com/vlanore/troubadour/actions/workflows/linting.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 **Troubadour** is a simple framework to build python text-based games that:
 * runs in the browser;
 * runs entirely client-side so projects are easy to deploy;

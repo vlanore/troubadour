@@ -107,7 +107,9 @@ class GameSaves:
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
         psr.onclick("load-modal-import", lambda _: None)  # TODO
-        psr.file_download_button("load-modal-download", str(jsp.encode(self)))
+        psr.file_download_button(
+            "load-modal-download", str(jsp.encode(self)), "saves.json"
+        )
 
     def get_next_id(self) -> int:
         if self.saves == []:

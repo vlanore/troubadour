@@ -99,9 +99,6 @@ class TypedLocalStorage(Generic[T]):
         else:
             return None
 
-    def __setitem__(self, key: str, value: Any) -> None:
-        js.localStorage.setItem(key, jsp.encode(value))
-
 
 local_storage = LocalStorage()
 

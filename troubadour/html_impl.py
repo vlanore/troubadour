@@ -6,10 +6,7 @@ from typing import Any, Callable, Optional
 import jsonpickle as jsp
 import mistune
 from pyodide.code import run_js  # type: ignore
-from pyodide.ffi import create_proxy  # type: ignore
 from pyscript import HTML  # type: ignore
-from pyscript import Element  # type: ignore
-from pyscript import js  # type: ignore
 from pyscript import display as psdisplay  # type: ignore
 
 from troubadour.id import get_id
@@ -27,7 +24,7 @@ from troubadour.interfaces import (
     TextInput,
 )
 from troubadour.troubadown import troubadownify
-import troubadour.html_render as html
+import troubadour.pyscript_render as psr
 
 
 class InfoPanel(AbstractInfoPanel):
@@ -87,9 +84,9 @@ class GameSaves:
     saves: list[GameSave] = field(default_factory=list)
 
     def render(self) -> None:
-        html.clear("saves-table")
+        psr.clear("saves-table")
         for save in self.saves:
-            html.insert_end(
+            psr.insert_end(
                 "saves-table",
                 f"""
             <tr>
@@ -102,15 +99,15 @@ class GameSaves:
                 </th>
             </tr>""",
             )
-            html.onclick(
+            psr.onclick(
                 f"troubadour-rmsave-{save.nb}",
                 lambda _, id=save.nb: delete_save(id),  # type:ignore
             )
-            html.onclick(
+            psr.onclick(
                 f"troubadour-load-{save.nb}",
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
-        html.onclick("load-modal-import", lambda _: None)  # TODO
+        psr.onclick("load-modal-import", lambda _: None)  # TODO
         run_js(
             f"""
 const blob = new Blob([`{str(jsp.encode(self)).encode("unicode_escape").decode("utf-8")}`], {{type: 'text/json'}});
@@ -137,29 +134,29 @@ button.download = "saves.json";
 
 
 def render_porthole(porthole: AbstractImagePanel) -> None:
-    html.set_src("porthole", porthole.get_url())
-    html.set_alt("porthole", porthole.get_alt())
+    psr.set_src("porthole", porthole.get_url())
+    psr.set_alt("porthole", porthole.get_alt())
 
 
 def render_panels(info: AbstractInfoPanel, extra: AbstractInfoPanel) -> None:
     extra_raw, extra_md = extra.get_text()
     extra_html = mistune.html(extra_raw) if extra_md else extra_raw
-    html.set_html("extra-content", extra_html)
-    html.set_html("extra-title", str(extra.get_title()))
+    psr.set_html("extra-content", extra_html)
+    psr.set_html("extra-title", str(extra.get_title()))
 
     info_raw, info_md = info.get_text()
     info_html = mistune.html(info_raw) if info_md else info_raw
-    html.set_html("info-content", info_html)
-    html.set_html("info-title", str(info.get_title()))
+    psr.set_html("info-content", info_html)
+    psr.set_html("info-title", str(info.get_title()))
 
 
 @dataclass
 class Story(AbstractStory):
     history: list[Cmd] = field(default_factory=list)
 
-    def _scroll_to_bottom(self) -> None:
-        tgt = Element("story").element
-        tgt.scrollTop = tgt.scrollHeight
+    # def _scroll_to_bottom(self) -> None:
+    #     tgt = Element("story").element
+    #     tgt.scrollTop = tgt.scrollHeight
 
     def display(
         self,
@@ -179,11 +176,11 @@ class Story(AbstractStory):
 
         if tooltips is not None:
             for i, tt in enumerate(tooltips):
-                html.add_tooltip(tt_labels[i], tt)
+                psr.add_tooltip(tt_labels[i], tt)
 
         if named_tooltips is not None:
             for name, tt in named_tooltips.items():
-                html.add_tooltip(tt_labels[name], tt)
+                psr.add_tooltip(tt_labels[name], tt)
 
     def newpage(self) -> None:
         self.history.insert(0, NewPageCmd())
@@ -211,14 +208,14 @@ def add_button(
     text: str, continuation: Callable, tooltip: Optional[str] = None
 ) -> None:
     id = get_id()
-    Element("story-interface").element.insertAdjacentHTML(
-        "beforeend",
+    psr.insert_end(
+        "story-interface",
         (
             '<button class="button" type="button" '
             f'id="troubadour_button_{id}">{text}</button>'
         ),
     )
-    html.onclick(f"troubadour_button_{id}", continuation)
+    psr.onclick(f"troubadour_button_{id}", continuation)
 
 
 def add_text_input(
@@ -228,8 +225,8 @@ def add_text_input(
     placeholder_text: str = "",
 ) -> None:
     id = get_id()
-    Element("story-interface").element.insertAdjacentHTML(
-        "beforeend",
+    psr.insert_end(
+        "story-interface",
         f"""
         <div class="field has-addons">
             <div class="control is-flex-grow-1">
@@ -244,16 +241,16 @@ def add_text_input(
     )
 
     def callback(_: Any) -> None:
-        value: str = Element(f"troubadour_inputtext_input_{id}").element.value
+        value: str = psr.get_value(f"troubadour_inputtext_input_{id}")
         if value == "":
             value = default_value
         continuation(value)
 
-    html.onclick(f"troubadour_inputtext_button_{id}", callback)
+    psr.onclick(f"troubadour_inputtext_button_{id}", callback)
 
 
 def get_state() -> Optional[GameState]:
-    encoded_state = js.localStorage.getItem("state")
+    encoded_state = psr.local_storage["state"]
     if encoded_state is not None:
         state = jsp.decode(encoded_state)
         assert isinstance(state, GameState)
@@ -263,7 +260,7 @@ def get_state() -> Optional[GameState]:
 
 
 def get_saves() -> Optional[GameSaves]:
-    encoded_saves = js.localStorage.getItem("saves")
+    encoded_saves = psr.local_storage["saves"]
     if encoded_saves is not None:
         saves = jsp.decode(encoded_saves)
         assert isinstance(saves, GameSaves)
@@ -301,9 +298,9 @@ def run_page(game: AbstractGame, method: str, **args: Any) -> None:
     interface = getattr(game, method)(**args)
     render_panels(game.info, game.extra)
     render_porthole(game.porthole)
-    html.clear("story-interface")
+    psr.clear("story-interface")
     render_interface(game, interface)
-    js.localStorage.setItem("state", jsp.encode(GameState(game, interface, LIGHT_MODE)))
+    psr.local_storage["state"] = GameState(game, interface, LIGHT_MODE)
 
 
 def save_game() -> None:
@@ -312,19 +309,19 @@ def save_game() -> None:
     assert isinstance(state, GameState)
     assert isinstance(saves, GameSaves)
     id = saves.get_next_id()
-    name = Element("save-input").element.value
+    name = psr.get_value("save-input")
     time = datetime.today()
     saves.saves.append(GameSave(id, name, state, time))
     saves.render()
-    js.localStorage.setItem("saves", jsp.encode(saves))
-    Element("save-modal").remove_class("is-active")
+    psr.local_storage["saves"] = saves
+    psr.remove_class("save-modal", "is-active")
 
 
 def delete_save(id: int) -> None:
     saves = get_saves()
     assert isinstance(saves, GameSaves)
     saves.saves = [save for save in saves.saves if save.nb != id]
-    js.localStorage.setItem("saves", jsp.encode(saves))
+    psr.local_storage["saves"] = saves
     saves.render()
 
 
@@ -332,62 +329,54 @@ def load_save(id: int) -> None:
     saves = get_saves()
     assert isinstance(saves, GameSaves)
     save = next(save for save in saves.saves if save.nb == id)
-    js.localStorage.setItem("state", jsp.encode(save.save))
+    psr.local_storage["state"] = save.save
     load_cache_data(None)
-    Element("load-modal").remove_class("is-active")
+    psr.remove_class("load-modal", "is-active")
 
 
 def run_game(game: AbstractGame) -> None:
     # saves
     match get_saves():
         case None:
-            js.localStorage.setItem("saves", jsp.encode(GameSaves()))
+            psr.local_storage["saves"] = GameSaves()
         case GameSaves() as saves:
             saves.render()
 
-    html.onclick("load-button", lambda _: Element("load-modal").add_class("is-active"))
-    html.onclick(
-        "load-modal-cancel", lambda _: Element("load-modal").remove_class("is-active")
-    )
-    html.onclick("save-button", lambda _: Element("save-modal").add_class("is-active"))
-    html.onclick("save-modal-save", lambda _: save_game())
-    html.onclick(
-        "save-modal-cancel", lambda _: Element("save-modal").remove_class("is-active")
-    )
+    psr.onclick("load-button", lambda _: psr.activate_modal("load-modal"))
+    psr.onclick("load-modal-cancel", lambda _: psr.deactivate_modal("load-modal"))
+    psr.onclick("save-button", lambda _: psr.activate_modal("save-modal"))
+    psr.onclick("save-modal-save", lambda _: save_game())
+    psr.onclick("save-modal-cancel", lambda _: psr.deactivate_modal("save-modal"))
 
     # dark mode
-    html.onclick("dark-mode-toggle", toggle_mode)
+    psr.onclick("dark-mode-toggle", toggle_mode)
 
     # resume modal
     def restart(_: Any) -> None:
         run_page(game, "start")
         close_resume_modal(None)
 
-    html.onclick("resume-modal-restart", restart)
-    html.onclick("resume-modal-load", load_cache_data)
+    psr.onclick("resume-modal-restart", restart)
+    psr.onclick("resume-modal-load", load_cache_data)
 
     # restart button
     def restart2(_: Any, new_game: AbstractGame = deepcopy(game)) -> None:
-        html.clear("story")
+        psr.clear("story")
         run_page(deepcopy(new_game), "start")
-        Element("restart-modal").remove_class("is-active")
+        psr.deactivate_modal("restart-modal")
 
-    html.onclick(
-        "restart-button", lambda _: Element("restart-modal").add_class("is-active")
-    )
-    html.onclick("restart-modal-restart", restart2)
-    html.onclick(
+    psr.onclick("restart-button", lambda _: psr.activate_modal("restart-modal"))
+    psr.onclick("restart-modal-restart", restart2)
+    psr.onclick(
         "restart-modal-cancel",
-        lambda _: Element("restart-modal").remove_class("is-active"),
+        lambda _: psr.deactivate_modal("restart-modal"),
     )
 
     # python terminal
-    html.onclick(
-        "python-button", lambda _: Element("python-modal").add_class("is-active")
-    )
-    html.onclick(
+    psr.onclick("python-button", lambda _: psr.activate_modal("python-modal"))
+    psr.onclick(
         "python-modal-cancel",
-        lambda _: Element("python-modal").remove_class("is-active"),
+        lambda _: psr.deactivate_modal("python-modal"),
     )
 
     # start game
@@ -397,7 +386,7 @@ def run_game(game: AbstractGame) -> None:
         case GameState(color_mode=color_mode):
             if color_mode == "dark":
                 toggle_mode(None)
-            Element("resume-modal").add_class("is-active")
+            psr.activate_modal("resume-modal")
 
 
 LIGHT_MODE = "light"
@@ -406,34 +395,34 @@ LIGHT_MODE = "light"
 def toggle_mode(_: Any) -> None:
     global LIGHT_MODE
     if LIGHT_MODE == "dark":
-        Element("dark-style").element.disabled = "disabled"
-        Element("light-style").element.disabled = None
-        Element("story-container").remove_class("dark-mode")
+        psr.disable("dark-style")
+        psr.enable("light-style")
+        psr.remove_class("story-container", "dark-mode")
         LIGHT_MODE = "light"
-        Element("dark-mode-icon").remove_class("fa-sun")
-        Element("dark-mode-icon").add_class("fa-moon")
+        psr.remove_class("dark-mode-icon", "fa-sun")
+        psr.add_class("dark-mode-icon", "fa-moon")
     elif LIGHT_MODE == "light":
-        Element("dark-style").element.disabled = None
-        Element("light-style").element.disabled = "disabled"
-        Element("story-container").add_class("dark-mode")
+        psr.enable("dark-style")
+        psr.disable("light-style")
+        psr.add_class("story-container", "dark-mode")
         LIGHT_MODE = "dark"
-        Element("dark-mode-icon").remove_class("fa-moon")
-        Element("dark-mode-icon").add_class("fa-sun")
-    state = jsp.decode(js.localStorage.getItem("state"))
-    assert isinstance(state, GameState)
+        psr.remove_class("dark-mode-icon", "fa-moon")
+        psr.add_class("dark-mode-icon", "fa-sun")
+    state = get_state()
+    assert state is not None
     state.color_mode = LIGHT_MODE
-    js.localStorage.setItem("state", jsp.encode(state))
+    psr.local_storage["state"] = state
 
 
 def close_resume_modal(_: Any) -> None:
-    Element("resume-modal").remove_class("is-active")
+    psr.remove_class("resume-modal", "is-active")
 
 
 def load_cache_data(_: Any) -> None:
     state = get_state()
     assert isinstance(state, GameState)
 
-    html.clear("story")
+    psr.clear("story")
     old_history = state.game.story.history.copy()
     state.game.story.history = []
     for cmd in reversed(old_history):
@@ -450,7 +439,7 @@ def load_cache_data(_: Any) -> None:
     render_panels(state.game.info, state.game.extra)
     render_porthole(state.game.porthole)
 
-    html.clear("story-interface")
+    psr.clear("story-interface")
     render_interface(state.game, state.interface)
 
     close_resume_modal(None)

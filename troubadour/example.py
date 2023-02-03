@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 from troubadour.interfaces import Button, AbstractGame, AbstractInterface, TextInput
-from troubadour.pyscript_impl import Story, InfoPanel, run_game, ImagePanel
+from troubadour.html_impl import Story, InfoPanel, run_game, ImagePanel
 
 
 @dataclass

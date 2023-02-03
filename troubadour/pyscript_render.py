@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 import jsonpickle as jsp
 from pyodide.code import run_js  # type: ignore
@@ -33,6 +33,10 @@ def set_alt(id: str, value: str) -> None:
     Element(id).element.alt = value
 
 
+def get_value(id: str) -> str:
+    return Element(id).element.value
+
+
 def add_tooltip(id: int, text: str) -> None:
     run_js(
         f"""tippy("#troubadour_tooltip_{id}",
@@ -42,3 +46,38 @@ def add_tooltip(id: int, text: str) -> None:
                 }}
             );"""
     )
+
+
+def add_class(id: str, cls: str) -> None:
+    Element(id).add_class(cls)
+
+
+def remove_class(id: str, cls: str) -> None:
+    Element(id).remove_class(cls)
+
+
+def activate_modal(id: str) -> None:
+    add_class(id, "is-active")
+
+
+def deactivate_modal(id: str) -> None:
+    remove_class(id, "is-active")
+
+
+def disable(id: str) -> None:
+    Element(id).element.disabled = "disabled"
+
+
+def enable(id: str) -> None:
+    Element(id).element.disabled = None
+
+
+class LocalStorage:
+    def __getitem__(self, key: str) -> Optional[str]:
+        return js.localStorage.getItem(key)
+
+    def __setitem__(self, key: str, value: Any) -> None:
+        js.localStorage.setItem(key, jsp.encode(value))
+
+
+local_storage = LocalStorage()

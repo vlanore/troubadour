@@ -2,6 +2,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Callable, Optional
+from enum import Enum
 
 import jsonpickle as jsp
 import mistune
@@ -49,11 +50,15 @@ class ImagePanel(itf.ImagePanel):
         self.alt = value
 
 
+class ColorMode(Enum):
+    light = 1
+    dark = 2
+
+
 @dataclass
 class GameState:
     game: itf.Game
     interface: list[itf.Input]
-    color_mode: str
 
 
 @dataclass
@@ -265,7 +270,7 @@ def run_page(game: itf.Game, method: str, **args: Any) -> None:
     render_porthole(game.porthole)
     psr.clear("story-interface")
     render_interface(game, interface)
-    psr.local_storage["state"] = GameState(game, interface, LIGHT_MODE)
+    psr.local_storage["state"] = GameState(game, interface)
 
 
 def save_game() -> None:
@@ -344,39 +349,46 @@ def run_game(game: itf.Game) -> None:
         lambda _: psr.deactivate_modal("python-modal"),
     )
 
+    # color mode
+    match psr.local_storage(ColorMode)["color-mode"]:
+        case None:
+            psr.local_storage["color-mode"] = ColorMode.light
+        case ColorMode.dark:
+            enable_dark_mode()
+
     # start game
     match get_state():
         case None:
             run_page(game, "start")
-        case GameState(color_mode=color_mode):
-            if color_mode == "dark":
-                toggle_mode(None)
+        case GameState():
             psr.activate_modal("resume-modal")
 
 
-LIGHT_MODE = "light"
+def enable_light_mode() -> None:
+    psr.disable("dark-style")
+    psr.enable("light-style")
+    psr.remove_class("story-container", "dark-mode")
+    psr.remove_class("dark-mode-icon", "fa-sun")
+    psr.add_class("dark-mode-icon", "fa-moon")
+    psr.local_storage["color-mode"] = ColorMode.light
+
+
+def enable_dark_mode() -> None:
+    psr.enable("dark-style")
+    psr.disable("light-style")
+    psr.add_class("story-container", "dark-mode")
+    psr.remove_class("dark-mode-icon", "fa-moon")
+    psr.add_class("dark-mode-icon", "fa-sun")
+    psr.local_storage["color-mode"] = ColorMode.dark
 
 
 def toggle_mode(_: Any) -> None:
-    global LIGHT_MODE
-    if LIGHT_MODE == "dark":
-        psr.disable("dark-style")
-        psr.enable("light-style")
-        psr.remove_class("story-container", "dark-mode")
-        LIGHT_MODE = "light"
-        psr.remove_class("dark-mode-icon", "fa-sun")
-        psr.add_class("dark-mode-icon", "fa-moon")
-    elif LIGHT_MODE == "light":
-        psr.enable("dark-style")
-        psr.disable("light-style")
-        psr.add_class("story-container", "dark-mode")
-        LIGHT_MODE = "dark"
-        psr.remove_class("dark-mode-icon", "fa-moon")
-        psr.add_class("dark-mode-icon", "fa-sun")
-    state = get_state()
-    assert state is not None
-    state.color_mode = LIGHT_MODE
-    psr.local_storage["state"] = state
+    color_mode = psr.local_storage(ColorMode)["color-mode"]
+    assert color_mode is not None
+    if color_mode == ColorMode.dark:
+        enable_light_mode()
+    elif color_mode == ColorMode.light:
+        enable_dark_mode()
 
 
 def close_resume_modal(_: Any) -> None:

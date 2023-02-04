@@ -73,6 +73,16 @@ class GameSave:
 class GameSaves:
     saves: list[GameSave] = field(default_factory=list)
 
+    def init(self) -> None:
+        def load_saves(saves: GameSaves) -> None:
+            old_saves = psr.local_storage(GameSaves)["saves"]
+            assert old_saves is not None
+            old_saves.merge(saves)
+            old_saves.render()
+            psr.local_storage["saves"] = old_saves
+
+        psr.on_file_upload("load-modal-import", load_saves, GameSaves)
+
     def render(self) -> None:
         psr.clear("saves-table")
         for save in self.saves:
@@ -97,7 +107,7 @@ class GameSaves:
                 f"troubadour-load-{save.nb}",
                 lambda _, id=save.nb: load_save(id),  # type:ignore
             )
-        psr.onclick("load-modal-import", lambda _: None)  # TODO
+
         psr.file_download_button(
             "load-modal-download", str(jsp.encode(self)), "saves.json"
         )
@@ -308,9 +318,11 @@ def run_game(game: itf.Game) -> None:
     # saves
     match get_saves():
         case None:
-            psr.local_storage["saves"] = GameSaves()
+            saves = GameSaves()
+            psr.local_storage["saves"] = saves
         case GameSaves() as saves:
             saves.render()
+    saves.init()
 
     psr.onclick("load-button", lambda _: psr.activate_modal("load-modal"))
     psr.onclick("load-modal-cancel", lambda _: psr.deactivate_modal("load-modal"))

@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, TypeVar, Generic, Type
+from typing import Any, Callable, Optional, TypeVar, Generic, Type, overload
 
 import jsonpickle as jsp
 from pyodide.code import run_js  # type: ignore
@@ -118,3 +118,34 @@ button.download = "{filename}";
 
 def display_story(text: str) -> None:
     psdisplay(HTML(text), target="story")
+
+
+@overload
+def on_file_upload(id: str, callback: Callable[[str], None], cls: None = None) -> None:
+    pass
+
+
+@overload
+def on_file_upload(id: str, callback: Callable[[T], None], cls: Type[T]) -> None:
+    pass
+
+
+def on_file_upload(
+    id: str,
+    callback: Callable[[str], None] | Callable[[T], None],
+    cls: Optional[Type[T]] = None,
+) -> None:
+    async def event_handler(event: Any, cb: Callable = callback) -> None:
+        file_list = event.target.files.to_py()
+        for f in file_list:
+            raw = await f.text()
+            if cls is None:
+                cb(raw)
+            else:
+                decoded = jsp.decode(raw)
+                assert isinstance(decoded, cls)
+                cb(decoded)
+            print("youpi")
+        Element(id).element.value = ""
+
+    Element(id).element.addEventListener("change", create_proxy(event_handler))

@@ -141,9 +141,21 @@
                     <tbody id="saves-table">
                     </tbody>
                 </table>
-                <p style="text-align: right;">
+                <p style="justify-content: flex-end; display: flex; gap: 10px;">
                     <a id="load-modal-download"><button class="button">Download all saves</button></a>
-                    <button id="load-modal-import" class="button">Import saves</button>
+                    <span class="file">
+                        <label class="file-label">
+                            <input id="load-modal-import" class="file-input" type="file" name="resume">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="fas fa-upload"></i>
+                                </span>
+                                <span class="file-label">
+                                    Import saves
+                                </span>
+                            </span>
+                        </label>
+                    </span>
                     <button id="load-modal-cancel" class="button">Cancel</button>
                 </p>
             </div>

@@ -145,7 +145,6 @@ def on_file_upload(
                 decoded = jsp.decode(raw)
                 assert isinstance(decoded, cls)
                 cb(decoded)
-            print("youpi")
         Element(id).element.value = ""
 
     Element(id).element.addEventListener("change", create_proxy(event_handler))

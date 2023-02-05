@@ -21,6 +21,7 @@ from docopt import docopt
 from termcolor import colored
 
 import templates
+import troubadour
 
 
 def section(text: str) -> None:
@@ -46,6 +47,7 @@ def error(text: str) -> None:
 # ======================================================================================
 section("Command line arguments")
 arguments = docopt(__doc__)
+print(arguments)
 proj_dir = Path(arguments["<project-directory>"])
 main = proj_dir / Path(arguments["<main>"])
 dest = Path(arguments["--dest"])
@@ -65,13 +67,25 @@ else:
     sys.exit(1)
 
 # ======================================================================================
+section("Setup troubadour symlink for devmode")
+troubadour_path = Path(troubadour.__file__).parent.parent
+print(f"Troubadour install located at {data(troubadour_path)}")
+troubadour_symlink = dest / "troubadour"
+print(f"Troubadour symlink path: {data(troubadour_symlink)}")
+troubadour_symlink.symlink_to(troubadour_path)
+success("Creating troubadour symlink")
+
+# ======================================================================================
 section("Generating index file from template")
 index_template = Template(pkg_resources.read_text(templates, "index.html"))
 success("Loading template")
+packages = ["jsonpickle", "mistune"]
+print("Pip packages are:", ", ".join(data(p) for p in packages))
 result = index_template.substitute(
     dict(
         file_list=",\n            ".join(f'"{str(file)}"' for file in files_to_include),
         main_file=f'"../{main}"',
+        packages=", ".join(f'"{package}"' for package in packages),
     )
 )
 success("Generate file from template")

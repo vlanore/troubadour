@@ -37,11 +37,17 @@ html {
     flex-flow: column nowrap;
     overflow: hidden;
     padding-right: 0;
+    width: 100%;
 }
 
 #story-container>.scroll-container {
-    flex: 1 0 0px;
+    width: 100%;
+    /* flex: 1 0 0px; */
     margin-bottom: 1em;
+}
+
+#story-container>.scroll-content {
+    width: 100%;
 }
 
 .scroll-container {
@@ -54,6 +60,7 @@ html {
 }
 
 #story {
+    width: 100%;
     padding: 10px;
 }
 

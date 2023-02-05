@@ -329,6 +329,7 @@ def run_game(game: itf.Game) -> None:
     psr.onclick("save-button", lambda _: psr.activate_modal("save-modal"))
     psr.onclick("save-modal-save", lambda _: save_game())
     psr.onclick("save-modal-cancel", lambda _: psr.deactivate_modal("save-modal"))
+    psr.onclick("load-modal-import-button", lambda _: psr.click("load-modal-import"))
 
     # dark mode
     psr.onclick("dark-mode-toggle", toggle_mode)

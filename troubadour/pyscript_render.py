@@ -25,6 +25,10 @@ def clear(id: str) -> None:
     set_html(id, "")
 
 
+def click(id: str) -> None:
+    Element(id).element.click()
+
+
 def set_src(id: str, value: str) -> None:
     Element(id).element.src = value
 

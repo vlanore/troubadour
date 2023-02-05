@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/@creativebulma/bulma-divider@1.1.0/dist/bulma-divider.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/flatly/bulmaswatch.min.css" id="light-style">
+    <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/default/bulmaswatch.min.css" id="light-style">
     <link rel="stylesheet" href="https://unpkg.com/bulmaswatch/darkly/bulmaswatch.min.css" disabled="disabled"
         id="dark-style">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
@@ -151,17 +151,15 @@
                         </button>
                     </a>
                     <span class="file">
-                        <label class="file-label">
-                            <input id="load-modal-import" class="file-input" type="file" name="resume">
-                            <span class="file-cta">
-                                <span class="file-icon">
-                                    <i class="fas fa-upload"></i>
-                                </span>
-                                <span class="file-label">
-                                    Import saves
-                                </span>
+                        <input id="load-modal-import" class="file-input" type="file" name="resume">
+                        <button id="load-modal-import-button" class="button">
+                            <span class="file-icon">
+                                <i class="fas fa-upload"></i>
                             </span>
-                        </label>
+                            <span class="file-label">
+                                Import saves
+                            </span>
+                        </button>
                     </span>
                     <button id="load-modal-cancel" class="button">Cancel</button>
                 </p>

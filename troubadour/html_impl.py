@@ -109,7 +109,9 @@ class GameSaves:
             )
 
         psr.file_download_button(
-            "load-modal-download", str(jsp.encode(self)), "saves.json"
+            "load-modal-download",
+            str(jsp.encode(self)),
+            f"saves{datetime.today().strftime('-%Y%m%d-%H%M')}.json",
         )
 
     def get_next_id(self) -> int:

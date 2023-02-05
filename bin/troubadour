@@ -12,9 +12,9 @@ Options:
 """
 
 import importlib.resources as pkg_resources
+import sys
 from pathlib import Path
 from string import Template
-import sys
 from typing import Any
 
 from docopt import docopt
@@ -43,9 +43,9 @@ def error(text: str) -> None:
     print(f"{text}:", colored("Error", "red"))
 
 
-arguments = docopt(__doc__)
-
+# ======================================================================================
 section("Command line arguments")
+arguments = docopt(__doc__)
 proj_dir = Path(arguments["<project-directory>"])
 main = proj_dir / Path(arguments["<main>"])
 dest = Path(arguments["--dest"])
@@ -53,6 +53,7 @@ print(f"Project directory: {param(proj_dir)}")
 print(f"Main script: {param(main)}")
 print(f"Destination directory: {param(dest)}")
 
+# ======================================================================================
 section("Computing list of files")
 files_to_include = list(proj_dir.rglob("[!_]*.py"))
 success("Getting list of python files")
@@ -63,6 +64,7 @@ else:
     error("Main file in directory")
     sys.exit(1)
 
+# ======================================================================================
 section("Generating index file from template")
 index_template = Template(pkg_resources.read_text(templates, "index.html"))
 success("Loading template")
@@ -74,6 +76,7 @@ result = index_template.substitute(
 )
 success("Generate file from template")
 
+# ======================================================================================
 section("Write to destination file")
 dest_index = dest / "index.html"
 dest_index.parent.mkdir(parents=True, exist_ok=True)

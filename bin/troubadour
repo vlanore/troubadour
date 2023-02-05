@@ -72,8 +72,25 @@ troubadour_path = Path(troubadour.__file__).parent.parent
 print(f"Troubadour install located at {data(troubadour_path)}")
 troubadour_symlink = dest / "troubadour"
 print(f"Troubadour symlink path: {data(troubadour_symlink)}")
-troubadour_symlink.symlink_to(troubadour_path)
-success("Creating troubadour symlink")
+if troubadour_symlink.is_symlink():
+    print("Symlink already present, points to", data(troubadour_symlink.readlink()))
+    if troubadour_symlink.readlink() != troubadour_path:
+        troubadour_symlink.unlink()
+        success("Removed incorrect symlink")
+        troubadour_symlink.symlink_to(troubadour_path, target_is_directory=True)
+        success("Creating troubadour symlink")
+else:
+    troubadour_symlink.symlink_to(troubadour_path, target_is_directory=True)
+    success("Creating troubadour symlink")
+
+# ======================================================================================
+section("Fetch troubadour files for devmode")
+troubadour_files = [
+    p.relative_to(troubadour_symlink)
+    for p in (troubadour_symlink / "troubadour").rglob("[!_]*.py")
+]
+success("Getting list of troubadpir files")
+print(f"Found {data(str(len(troubadour_files))+' files')}")
 
 # ======================================================================================
 section("Generating index file from template")
@@ -86,6 +103,9 @@ result = index_template.substitute(
         file_list=",\n            ".join(f'"{str(file)}"' for file in files_to_include),
         main_file=f'"../{main}"',
         packages=", ".join(f'"{package}"' for package in packages),
+        troubadour_files=",\n            ".join(
+            f'"{str(file)}"' for file in troubadour_files
+        ),
     )
 )
 success("Generate file from template")

@@ -47,13 +47,17 @@ def error(text: str) -> None:
 # ======================================================================================
 section("Command line arguments")
 arguments = docopt(__doc__)
-print(arguments)
 proj_dir = Path(arguments["<project-directory>"])
 main = proj_dir / Path(arguments["<main>"])
 dest = Path(arguments["--dest"])
 print(f"Project directory: {param(proj_dir)}")
 print(f"Main script: {param(main)}")
 print(f"Destination directory: {param(dest)}")
+
+# ======================================================================================
+section("Creating dest directory")
+dest.mkdir(parents=True, exist_ok=True)
+success(f"Creating dest directory at {data(dest)}")
 
 # ======================================================================================
 section("Computing list of files")
@@ -67,9 +71,10 @@ else:
     sys.exit(1)
 
 # ======================================================================================
-section("Setup troubadour symlink for devmode")
+section("Setup troubadour symlinks for devmode")
 troubadour_path = Path(troubadour.__file__).parent.parent
 print(f"Troubadour install located at {data(troubadour_path)}")
+
 troubadour_symlink = dest / "troubadour"
 print(f"Troubadour symlink path: {data(troubadour_symlink)}")
 if troubadour_symlink.is_symlink():
@@ -113,7 +118,6 @@ success("Generate file from template")
 # ======================================================================================
 section("Write to destination file")
 dest_index = dest / "index.html"
-dest_index.parent.mkdir(parents=True, exist_ok=True)
 success(f"Build directory ({data(dest)})")
 with dest_index.open("w") as f:
     f.write(result)

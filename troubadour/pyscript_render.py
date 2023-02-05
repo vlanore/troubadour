@@ -37,9 +37,9 @@ def get_value(id: str) -> str:
     return Element(id).element.value
 
 
-def add_tooltip(id: int, text: str) -> None:
+def add_tooltip(id: str, text: str) -> None:
     run_js(
-        f"""tippy("#troubadour_tooltip_{id}",
+        f"""tippy("#{id}",
                 {{
                     content:"{text}",
                     allowHTML:true,

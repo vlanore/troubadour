@@ -170,11 +170,11 @@ class Story(itf.Story):
 
         if tooltips is not None:
             for i, tt in enumerate(tooltips):
-                psr.add_tooltip(tt_labels[i], tt)
+                psr.add_tooltip(f"troubadour_tooltip_{tt_labels[i]}", tt)
 
         if named_tooltips is not None:
             for name, tt in named_tooltips.items():
-                psr.add_tooltip(tt_labels[name], tt)
+                psr.add_tooltip(f"troubadour_tooltip_{tt_labels[name]}", tt)
 
     def newpage(self) -> None:
         self.history.insert(0, itf.NewPageCmd())
@@ -360,6 +360,13 @@ def run_game(game: itf.Game) -> None:
         "python-modal-cancel",
         lambda _: psr.deactivate_modal("python-modal"),
     )
+
+    # tooltips
+    psr.add_tooltip("save-button", "Save current game")
+    psr.add_tooltip("load-button", "Load game and manage saves")
+    psr.add_tooltip("python-button", "Access the python console")
+    psr.add_tooltip("dark-mode-toggle", "Toggle color mode (light/dark)")
+    psr.add_tooltip("restart-button", "Restart the game")
 
     # color mode
     match psr.local_storage(ColorMode)["color-mode"]:

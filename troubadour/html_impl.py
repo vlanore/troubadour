@@ -340,6 +340,7 @@ def run_game(game: itf.Game) -> None:
     def restart(_: Any) -> None:
         run_page(game, "start")
         close_resume_modal(None)
+        psr.add_class("screen-cover", "invisible")  # remove screen cover
 
     psr.onclick("resume-modal-restart", restart)
     psr.onclick("resume-modal-load", load_cache_data)
@@ -382,6 +383,7 @@ def run_game(game: itf.Game) -> None:
     match get_state():
         case None:
             run_page(game, "start")
+            psr.add_class("screen-cover", "invisible")  # remove screen cover
         case GameState():
             psr.activate_modal("resume-modal")
 
@@ -389,7 +391,7 @@ def run_game(game: itf.Game) -> None:
 def enable_light_mode() -> None:
     psr.disable("dark-style")
     psr.enable("light-style")
-    psr.remove_class("story-container", "dark-mode")
+    psr.remove_class("body", "dark-mode")
     psr.remove_class("dark-mode-icon", "fa-sun")
     psr.add_class("dark-mode-icon", "fa-moon")
     psr.local_storage["color-mode"] = ColorMode.light
@@ -398,7 +400,7 @@ def enable_light_mode() -> None:
 def enable_dark_mode() -> None:
     psr.enable("dark-style")
     psr.disable("light-style")
-    psr.add_class("story-container", "dark-mode")
+    psr.add_class("body", "dark-mode")
     psr.remove_class("dark-mode-icon", "fa-moon")
     psr.add_class("dark-mode-icon", "fa-sun")
     psr.local_storage["color-mode"] = ColorMode.dark
@@ -442,6 +444,7 @@ def load_cache_data(_: Any) -> None:
     render_interface(state.game, state.interface)
 
     close_resume_modal(None)
+    psr.add_class("screen-cover", "invisible")  # remove screen cover
 
 
 if __name__ == "__main__":

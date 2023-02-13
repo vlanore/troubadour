@@ -94,7 +94,7 @@ html {
     visibility: hidden;
 }
 
-.dark-mode#story-container>.scroll-container::-webkit-scrollbar-thumb {
+.dark-mode #story-container>.scroll-container::-webkit-scrollbar-thumb {
     background: rgb(55, 55, 55);
 }
 
@@ -141,4 +141,23 @@ html {
 .py-terminal {
     min-height: 50vh;
     display: block;
+}
+
+#screen-cover {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255);
+}
+
+.dark-mode #screen-cover {
+    background: rgba(0, 0, 0);
+}
+
+.invisible {
+    display: none;
 }

@@ -47,4 +47,5 @@ if __name__ == "__main__":
         "Hello *world*", classes=["red", "blue"], tooltip=RichText("Hello there!")
     )
     t2 = RichText("# Hello\n\nMessage: **{}**", args=[t1])
-    print(t2.render())
+    t3 = RichText("{0}\n\n{0}", args=[t2])
+    print(*t3.render())

@@ -49,28 +49,26 @@ class RichText:
 
     def tooltip(self, tooltip: "str | RichText") -> "RichText":
         result = deepcopy(self)
-        match tooltip:
-            case RichText():
-                result._tooltip = tooltip
-            case str():
-                result._tooltip = RichText(tooltip)
+        result._tooltip = make_rich_text(tooltip)
         return result
 
     def format(self, *args: Any, **kwargs: Any) -> "RichText":
         result = deepcopy(self)
         for arg in args:
-            match arg:
-                case RichText():
-                    result._args.append(arg)
-                case _:
-                    result._args.append(RichText(str(arg)))
+            result._args.append(make_rich_text(arg))
         for key, arg in kwargs.items():
-            match arg:
-                case RichText():
-                    result._kwargs[key] = arg
-                case _:
-                    result._kwargs[key] = RichText(str(arg))
+            result._kwargs[key] = make_rich_text(arg)
         return result
+
+
+def make_rich_text(input: Any) -> RichText:
+    match input:
+        case str():
+            return RichText(input)
+        case RichText():
+            return input
+        case _:
+            return RichText(str(input))
 
 
 if __name__ == "__main__":

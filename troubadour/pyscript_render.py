@@ -42,14 +42,6 @@ def get_value(id: str) -> str:
 
 
 def add_tooltip(id: str, text: str) -> None:
-    print(
-        f"""tippy("#{id}",
-                {{
-                    content:"{text}",
-                    allowHTML:true,
-                }}
-            );"""
-    )
     run_js(
         f"""tippy("#{id}",
                 {{

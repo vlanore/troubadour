@@ -164,7 +164,6 @@ class Story(itf.Story):
         psr.display_story(html_text)
 
         for name, tt in tooltips.items():
-            print(name, tt)
             psr.add_tooltip(name, tt)
 
     def newpage(self) -> None:

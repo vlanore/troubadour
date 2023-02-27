@@ -12,6 +12,7 @@ Options:
 """
 
 import importlib.resources as pkg_resources
+from importlib.util import find_spec
 import sys
 from pathlib import Path
 from string import Template
@@ -21,7 +22,6 @@ from docopt import docopt
 from termcolor import colored
 
 import templates
-import troubadour
 
 
 def section(text: str) -> None:
@@ -72,7 +72,10 @@ else:
 
 # ======================================================================================
 section("Setup troubadour symlinks for devmode")
-troubadour_path = Path(troubadour.__file__).parent.parent
+troubadour_spec = find_spec("troubadour")
+assert troubadour_spec is not None and troubadour_spec.origin is not None
+troubadour_path = Path(troubadour_spec.origin).parent.parent
+assert (troubadour_path / "troubadour").is_dir()
 print(f"Troubadour install located at {data(troubadour_path)}")
 
 troubadour_symlink = dest / "troubadour"
@@ -92,7 +95,7 @@ else:
 section("Fetch troubadour files for devmode")
 troubadour_files = [
     p.relative_to(troubadour_symlink)
-    for p in (troubadour_symlink / "troubadour").rglob("[!_]*.py")
+    for p in (troubadour_symlink / "troubadour").rglob("*.py")
 ]
 success("Getting list of troubadpir files")
 print(f"Found {data(str(len(troubadour_files))+' files')}")

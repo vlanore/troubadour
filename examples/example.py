@@ -1,18 +1,17 @@
 from dataclasses import dataclass, field
 
-from troubadour.interfaces import Button, Game, Input, TextInput
-from troubadour.html_impl import Story, InfoPanel, run_game, ImagePanel
-from troubadour.rich_text import RichText
+import troubadour as tbd
+from troubadour import RichText
 
 
 @dataclass
-class MyGame(Game):
-    story: Story = field(default_factory=Story)
-    info: InfoPanel = field(default_factory=InfoPanel)
-    extra: InfoPanel = field(default_factory=InfoPanel)
-    porthole: ImagePanel = field(default_factory=ImagePanel)
+class MyGame(tbd.Game):
+    story: tbd.Story = field(default_factory=tbd.Story)
+    info: tbd.InfoPanel = field(default_factory=tbd.InfoPanel)
+    extra: tbd.InfoPanel = field(default_factory=tbd.InfoPanel)
+    porthole: tbd.ImagePanel = field(default_factory=tbd.ImagePanel)
 
-    def start(self) -> list[Input]:
+    def start(self) -> list[tbd.Input]:
         self.porthole.set_url("https://picsum.photos/300/350")
         self.info.set_title("Informazion")
         self.info.set_text("str: **4**\n\nagi: **2**\n\nint: **3**")
@@ -42,29 +41,31 @@ situation? Are we {}?
 
         self.story.image("https://picsum.photos/800/200", "image")
 
-        return [Button("Click me", "pouac")]
+        return [tbd.Button("Click me", "pouac")]
 
-    def pouic(self) -> list[Input]:
+    def pouic(self) -> list[tbd.Input]:
         self.story.newpage()
         self.story.display("Hello")
         self.story.image("https://picsum.photos/800/150", "image")
-        return [Button("Pouac all the way", "pouac")]
+        return [tbd.Button("Pouac all the way", "pouac")]
 
-    def pouac(self) -> list[Input]:
+    def pouac(self) -> list[tbd.Input]:
         self.story.newpage()
         self.story.display("Hello world\n\nSo great")
         return [
-            Button("Pouac", "pouac"),
-            TextInput("Send", "pouec", "hello world", "Type some random thing here"),
+            tbd.Button("Pouac", "pouac"),
+            tbd.TextInput(
+                "Send", "pouec", "hello world", "Type some random thing here"
+            ),
         ]
 
-    def pouec(self, msg: str) -> list[Input]:
+    def pouec(self, msg: str) -> list[tbd.Input]:
         self.story.newpage()
         self.story.display(f"This is the message: {msg}")
         return [
-            Button("Pouac", "pouac"),
-            Button("Pouic", "pouic"),
+            tbd.Button("Pouac", "pouac"),
+            tbd.Button("Pouic", "pouic"),
         ]
 
 
-run_game(MyGame())
+tbd.run_game(MyGame())

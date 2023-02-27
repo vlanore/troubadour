@@ -13,10 +13,11 @@ import troubadour.pyscript_render as psr
 from troubadour.rich_text import RichText, make_rich_text
 
 
+@dataclass
 class InfoPanel(itf.InfoPanel):
-    def __init__(self) -> None:
-        self.title: Optional[str] = None
-        self.text = ""
+    title: Optional[str] = None
+    text: str = ""
+    markdown: bool = True
 
     def set_title(self, text: str) -> None:
         self.title = text
@@ -32,10 +33,10 @@ class InfoPanel(itf.InfoPanel):
         return self.text, self.markdown
 
 
+@dataclass
 class ImagePanel(itf.ImagePanel):
-    def __init__(self) -> None:
-        self.url = ""
-        self.alt = ""
+    url = ""
+    alt = ""
 
     def get_url(self) -> str:
         return self.url

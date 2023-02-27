@@ -28,7 +28,7 @@ This is a test of the **markdown capabilities** of the thing.
 
 Please disregard {}.
 
-## Information
+## {title}
 
 This is a test. Or is it? What happens if it isn't? Who could have predicted this
 situation? Are we {}?
@@ -36,6 +36,7 @@ situation? Are we {}?
             ).format(
                 RichText("actual content").tooltip("I'm a <b>tooltip</b>"),
                 RichText("doomed").classes("red").tooltip("Je suis une tooltip"),
+                title=RichText("Information").classes("red"),
             )
         )
 

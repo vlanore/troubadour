@@ -9,8 +9,8 @@ import mistune
 
 from troubadour.id import get_id
 import troubadour.interfaces as itf
-from troubadour.troubadown import troubadownify
 import troubadour.pyscript_render as psr
+from troubadour.rich_text import RichText, make_rich_text
 
 
 class InfoPanel(itf.InfoPanel):
@@ -154,29 +154,18 @@ class Story(itf.Story):
     #     tgt = Element("story").element
     #     tgt.scrollTop = tgt.scrollHeight
 
-    def display(
-        self,
-        text: str,
-        markdown: bool = True,
-        tooltips: Optional[list[str]] = None,
-        named_tooltips: Optional[dict[str, str]] = None,
-    ) -> None:
-        self.history.insert(0, itf.DisplayCmd(text, markdown, tooltips, named_tooltips))
+    def display(self, text: str | RichText) -> None:
+        rich_text = make_rich_text(text)
 
-        html_text, tt_labels = troubadownify(text)
+        self.history.insert(0, itf.DisplayCmd(rich_text))
 
-        if markdown:
-            psr.display_story(mistune.html(html_text))
-        else:
-            psr.display_story(html_text)
+        html_text, tooltips = rich_text.render()
 
-        if tooltips is not None:
-            for i, tt in enumerate(tooltips):
-                psr.add_tooltip(f"troubadour_tooltip_{tt_labels[i]}", tt)
+        psr.display_story(html_text)
 
-        if named_tooltips is not None:
-            for name, tt in named_tooltips.items():
-                psr.add_tooltip(f"troubadour_tooltip_{tt_labels[name]}", tt)
+        for name, tt in tooltips.items():
+            print(name, tt)
+            psr.add_tooltip(name, tt)
 
     def newpage(self) -> None:
         self.history.insert(0, itf.NewPageCmd())
@@ -428,8 +417,8 @@ def load_cache_data(_: Any) -> None:
     state.game.story.history = []
     for cmd in reversed(old_history):
         match cmd:
-            case itf.DisplayCmd(text, markdown, tooltips, named_tooltips):
-                state.game.story.display(text, markdown, tooltips, named_tooltips)
+            case itf.DisplayCmd(text):
+                state.game.story.display(text)
             case itf.NewPageCmd():
                 state.game.story.newpage()
             case itf.ImageCmd(url, alt):

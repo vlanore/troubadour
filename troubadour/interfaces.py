@@ -1,14 +1,13 @@
-from dataclasses import dataclass
 from abc import abstractmethod
+from dataclasses import dataclass
 from typing import Optional, Protocol, runtime_checkable
+
+from troubadour.rich_text import RichText
 
 
 @dataclass
 class DisplayCmd:
-    text: str
-    markdown: bool = True
-    tooltips: Optional[list[str]] = None
-    named_tooltips: Optional[dict[str, str]] = None
+    text: RichText
 
 
 class NewPageCmd:
@@ -28,13 +27,7 @@ class Story(Protocol):
     history: list[Cmd]
 
     @abstractmethod
-    def display(
-        self,
-        text: str,
-        markdown: bool = True,
-        tooltips: Optional[list[str]] = None,
-        named_tooltips: Optional[dict[str, str]] = None,
-    ) -> None:
+    def display(self, text: str | RichText) -> None:
         pass
 
     @abstractmethod

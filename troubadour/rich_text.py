@@ -29,13 +29,15 @@ class RichText:
             tooltips |= rec_tooltips
         result = self._text.format(*rendered_args, **rendered_kwargs)
         html_params = ""
-        if self._classes:
-            html_params += f' class="{" ".join(self._classes)}"'
+        classes = self._classes
         if self._tooltip is not None:
+            classes.append("tooltip")
             id = get_id()
             html_params += f' id="troubadour_tooltip_{id}"'
             tooltips[f"troubadour_tooltip_{id}"], rec_tooltips = self._tooltip.render()
             tooltips |= rec_tooltips
+        if classes:
+            html_params += f' class="{" ".join(self._classes)}"'
         if html_params != "":
             result = f"<span{html_params}>{result}</span>"
         if markdown:

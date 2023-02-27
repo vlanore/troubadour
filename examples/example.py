@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from troubadour.interfaces import Button, Game, Input, TextInput
 from troubadour.html_impl import Story, InfoPanel, run_game, ImagePanel
+from troubadour.rich_text import RichText
 
 
 @dataclass
@@ -19,25 +20,23 @@ class MyGame(Game):
         self.extra.set_text("things\n\nthings\n\nthings\n\nthings\n\nthings\n\nthangs")
 
         self.story.display(
-            """
+            RichText(
+                """
 # Markdown test
 
 This is a test of the **markdown capabilities** of the thing.
 
-Please disregard |lapin?actual content|.
+Please disregard {}.
 
 ## Information
 
 This is a test. Or is it? What happens if it isn't? Who could have predicted this
-situation? Are we |?red:doomed|?
-        """,
-            tooltips=["I'm a <b>tooltip</b>"],
-            named_tooltips={"lapin": "Je suis une tooltip"},
-        )
-
-        self.story.display(
-            "Je suis un |?test|.\n\nJe suis |?le roi| des test.",
-            tooltips=["Tooltip is life.", "tooltip is important"],
+situation? Are we {}?
+        """
+            ).format(
+                RichText("actual content").tooltip("I'm a <b>tooltip</b>"),
+                RichText("doomed").classes("red").tooltip("Je suis une tooltip"),
+            )
         )
 
         self.story.image("https://picsum.photos/800/200", "image")

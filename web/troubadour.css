@@ -102,11 +102,6 @@ html {
     visibility: visible;
 }
 
-#extra {
-    width: 250px;
-    flex: 1 0 auto;
-}
-
 .tooltip {
     text-decoration: underline dotted 1.5px;
     text-underline-offset: 4px;

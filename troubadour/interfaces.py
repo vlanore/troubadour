@@ -66,7 +66,6 @@ class Input:
 class Game(Protocol):
     story: Story
     info: Optional[InfoPanel] = None
-    extra: Optional[InfoPanel] = None
     porthole: ImagePanel
 
     @abstractmethod

@@ -77,7 +77,11 @@ def enable(id: str) -> None:
 
 
 def hide(id: str) -> None:
-    Element(id).element.style = str(Element(id).element.style) + ";display:None"
+    Element(id).element.style.display = "none"
+
+
+def unhide(id: str) -> None:
+    Element(id).element.style.display = "block"
 
 
 T = TypeVar("T")

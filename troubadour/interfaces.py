@@ -66,7 +66,7 @@ class Input:
 class Game(Protocol):
     story: Story
     info: Optional[InfoPanel] = None
-    porthole: ImagePanel
+    porthole: Optional[ImagePanel] = None
 
     @abstractmethod
     def start(self) -> list[Input]:

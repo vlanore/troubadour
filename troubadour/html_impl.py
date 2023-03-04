@@ -130,13 +130,18 @@ class GameSaves:
                 self.saves.append(save)
 
 
-def render_porthole(porthole: itf.ImagePanel) -> None:
-    psr.set_src("porthole", porthole.get_url())
-    psr.set_alt("porthole", porthole.get_alt())
+def render_porthole(porthole: Optional[itf.ImagePanel]) -> None:
+    if porthole is not None:
+        psr.unhide("porthole-container")
+        psr.set_src("porthole", porthole.get_url())
+        psr.set_alt("porthole", porthole.get_alt())
+    else:
+        psr.hide("porthole-container")
 
 
 def render_info(info: Optional[itf.InfoPanel]) -> None:
     if info is not None:
+        psr.unhide("info")
         info_raw, info_md = info.get_text()
         info_html = mistune.html(info_raw) if info_md else info_raw
         psr.set_html("info-content", info_html)

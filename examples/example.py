@@ -7,11 +7,11 @@ from troubadour import RichText
 @dataclass
 class MyGame(tbd.Game):
     story: tbd.Story = field(default_factory=tbd.Story)
-    porthole: tbd.ImagePanel = field(default_factory=tbd.ImagePanel)
+    # porthole: tbd.ImagePanel = field(default_factory=tbd.ImagePanel)
     info: tbd.InfoPanel = field(default_factory=tbd.InfoPanel)
 
     def start(self) -> list[tbd.Input]:
-        self.porthole.set_url("https://picsum.photos/300/350")
+        # self.porthole.set_url("https://picsum.photos/300/350")
         self.info.set_title("Informazion")
         self.info.set_text("str: **4**\n\nagi: **2**\n\nint: **3**")
 
@@ -47,6 +47,7 @@ situation? Are we {}?
         return [tbd.Button("Pouac all the way", "pouac")]
 
     def pouac(self) -> list[tbd.Input]:
+        self.porthole = None
         self.story.newpage()
         self.story.display("Hello world\n\nSo great")
         return [
@@ -57,6 +58,8 @@ situation? Are we {}?
         ]
 
     def pouec(self, msg: str) -> list[tbd.Input]:
+        self.porthole = tbd.ImagePanel()
+        self.porthole.set_url("https://picsum.photos/300/350")
         self.story.newpage()
         self.story.display(f"This is the message: {msg}")
         return [

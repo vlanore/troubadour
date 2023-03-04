@@ -20,19 +20,32 @@ class MyGame(tbd.Game):
                 """
 # Markdown test
 
-This is a test of the **markdown capabilities** of the thing.
+Sed neque quam, porttitor vitae mattis quis, efficitur sit amet enim. Nullam sit amet
+orci ut lacus pharetra tristique. Suspendisse posuere id elit at mattis. Maecenas erat
+est, euismod nec nulla eu, mattis pharetra arcu. Sed eget sapien id tortor lacinia
+laoreet ut a mauris. Nam vel consectetur erat. Fusce eu metus lacus. Ut vitae lacus in
+diam vulputate laoreet. Ut pulvinar sit amet arcu nec maximus. Nulla bibendum, nulla eu
+vestibulum tempor, ipsum tellus rutrum risus, eget elementum metus ex et neque. Class
+aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+Fusce id lacinia metus, nec tristique felis. Vivamus sed risus lobortis, sodales erat
+vitae, sollicitudin tortor. Donec vitae congue massa.
 
-Please disregard {}.
+Morbi at interdum dolor. Duis et maximus dolor. Fusce lobortis sit amet eros ac
+molestie. Phasellus ligula ipsum, congue at purus eget, tempus interdum orci. Nullam sit
+amet urna turpis. Mauris scelerisque eu odio quis porta. Donec rutrum in lacus eget
+volutpat. Donec placerat molestie bibendum. Nam pharetra at massa tempus euismod.
+Suspendisse eget turpis eget sem lacinia vestibulum id ut purus. Phasellus aliquet diam
+eu laoreet rutrum. In eleifend rhoncus ante, eu aliquam dui consequat eget. Sed eu nunc
+sit amet arcu laoreet congue. Nam ut nulla massa. Vivamus vel diam vel ipsum molestie
+rutrum. Vivamus at arcu felis.
 
-## {title}
+## Subtitle
 
 This is a test. Or is it? What happens if it isn't? Who could have predicted this
 situation? Are we {}?
         """
             ).format(
-                RichText("actual content").tooltip("I'm a <b>tooltip</b>"),
                 RichText("doomed").classes("red").tooltip("Je suis une tooltip"),
-                title=RichText("Information").classes("red"),
             )
         )
 
@@ -49,7 +62,16 @@ situation? Are we {}?
     def pouac(self) -> list[tbd.Input]:
         self.porthole = None
         self.story.newpage()
-        self.story.display("Hello world\n\nSo great")
+        self.story.display(
+            """Quisque nunc tortor, finibus eu gravida quis, tristique at enim.
+            Vestibulum imperdiet tempus accumsan. Sed ultricies enim a mattis pretium.
+            Curabitur eu sem ac urna suscipit tincidunt eu in dui. Phasellus pharetra
+            diam urna, sit amet sodales lectus dignissim eget. Sed fringilla porta
+            pulvinar. Mauris eleifend dui eu finibus pretium. Morbi turpis quam,
+            sollicitudin a justo sit amet, vulputate ultrices nunc. Fusce maximus
+            tristique erat vitae ultrices. Aenean euismod pellentesque erat quis
+            egestas. Aliquam erat volutpat."""
+        )
         return [
             tbd.Button("Pouac", "pouac"),
             tbd.TextInput(

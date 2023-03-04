@@ -32,7 +32,7 @@ html {
 #story-container {
     /* font-size: large; */
     max-width: 650px;
-    flex: 1 0 100%;
+    flex: 1 1 85%;
     display: flex;
     flex-flow: column nowrap;
     overflow: hidden;

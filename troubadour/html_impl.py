@@ -135,16 +135,24 @@ def render_porthole(porthole: itf.ImagePanel) -> None:
     psr.set_alt("porthole", porthole.get_alt())
 
 
-def render_panels(info: itf.InfoPanel, extra: itf.InfoPanel) -> None:
-    extra_raw, extra_md = extra.get_text()
-    extra_html = mistune.html(extra_raw) if extra_md else extra_raw
-    psr.set_html("extra-content", extra_html)
-    psr.set_html("extra-title", str(extra.get_title()))
+def render_panels(
+    info: Optional[itf.InfoPanel], extra: Optional[itf.InfoPanel]
+) -> None:
+    if info is not None:
+        info_raw, info_md = info.get_text()
+        info_html = mistune.html(info_raw) if info_md else info_raw
+        psr.set_html("info-content", info_html)
+        psr.set_html("info-title", str(info.get_title()))
+    else:
+        psr.hide("info")
 
-    info_raw, info_md = info.get_text()
-    info_html = mistune.html(info_raw) if info_md else info_raw
-    psr.set_html("info-content", info_html)
-    psr.set_html("info-title", str(info.get_title()))
+    if extra is not None:
+        extra_raw, extra_md = extra.get_text()
+        extra_html = mistune.html(extra_raw) if extra_md else extra_raw
+        psr.set_html("extra-content", extra_html)
+        psr.set_html("extra-title", str(extra.get_title()))
+    else:
+        psr.hide("extra")
 
 
 @dataclass

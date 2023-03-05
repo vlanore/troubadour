@@ -8,12 +8,16 @@ from troubadour import RichText
 class MyGame(tbd.Game):
     story: tbd.Story = field(default_factory=tbd.Story)
     # porthole: tbd.ImagePanel = field(default_factory=tbd.ImagePanel)
-    info: tbd.InfoPanel = field(default_factory=tbd.InfoPanel)
+    info: tbd.InfoPanel = field(default_factory=lambda: tbd.InfoPanel(RichText("")))
 
     def start(self) -> list[tbd.Input]:
         # self.porthole.set_url("https://picsum.photos/300/350")
         self.info.set_title("Informazion")
-        self.info.set_text("str: **4**\n\nagi: **2**\n\nint: **3**")
+        self.info.set_text(
+            RichText("str: **{}**\n\nagi: **2**\n\nint: **3**").format(
+                RichText("4").classes("red").tooltip("Strength")
+            )
+        )
 
         self.story.display(
             RichText(

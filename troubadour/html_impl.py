@@ -5,7 +5,6 @@ from typing import Any, Callable, Optional
 from enum import Enum
 
 import jsonpickle as jsp
-import mistune
 
 from troubadour.id import get_id
 import troubadour.interfaces as itf
@@ -15,22 +14,25 @@ from troubadour.rich_text import RichText, make_rich_text
 
 @dataclass
 class InfoPanel(itf.InfoPanel):
-    title: Optional[str] = None
-    text: str = ""
+    text: RichText
+    title: Optional[RichText] = None
     markdown: bool = True
 
-    def set_title(self, text: str) -> None:
-        self.title = text
+    def set_title(self, text: Optional[str | RichText]) -> None:
+        if text is None:
+            self.title = None
+        else:
+            self.title = make_rich_text(text)
 
-    def get_title(self) -> Optional[str]:
+    def get_title(self) -> Optional[RichText]:
         return self.title
 
-    def set_text(self, text: str, markdown: bool = True) -> None:
-        self.text = text
+    def set_text(self, text: str | RichText, markdown: bool = True) -> None:
+        self.text = make_rich_text(text)
         self.markdown = markdown
 
-    def get_text(self) -> tuple[str, bool]:
-        return self.text, self.markdown
+    def get_text(self) -> RichText:
+        return self.text
 
 
 @dataclass
@@ -142,10 +144,17 @@ def render_porthole(porthole: Optional[itf.ImagePanel]) -> None:
 def render_info(info: Optional[itf.InfoPanel]) -> None:
     if info is not None:
         psr.unhide("info")
-        info_raw, info_md = info.get_text()
-        info_html = mistune.html(info_raw) if info_md else info_raw
-        psr.set_html("info-content", info_html)
-        psr.set_html("info-title", str(info.get_title()))
+        text, tooltips = info.get_text().render()
+        psr.set_html("info-content", text)
+
+        title = info.get_title()
+        if title is not None:
+            title_text, title_tooltips = title.render()
+            psr.set_html("info-title", title_text)
+            tooltips |= title_tooltips
+
+        for id, text in tooltips.items():
+            psr.add_tooltip(id, text)
     else:
         psr.hide("info")
 
@@ -437,8 +446,3 @@ def load_cache_data(_: Any) -> None:
 
     close_resume_modal(None)
     psr.add_class("screen-cover", "invisible")  # remove screen cover
-
-
-if __name__ == "__main__":
-    s = Story()
-    i = InfoPanel()

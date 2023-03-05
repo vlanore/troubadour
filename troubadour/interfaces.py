@@ -40,11 +40,11 @@ class Story(Protocol):
 
 
 class InfoPanel(Protocol):
-    def get_title(self) -> Optional[str]:
-        return ""
+    def get_title(self) -> Optional[RichText]:
+        return None
 
     @abstractmethod
-    def get_text(self) -> tuple[str, bool]:
+    def get_text(self) -> RichText:
         pass
 
 

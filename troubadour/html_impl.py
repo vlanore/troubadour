@@ -199,7 +199,7 @@ class Story(itf.Story):
 
 
 def add_button(
-    text: str, continuation: Callable, tooltip: Optional[str] = None
+    text: str, continuation: Callable, tooltip: Optional[str | RichText] = None
 ) -> None:
     id = get_id()
     psr.insert_end(
@@ -211,7 +211,10 @@ def add_button(
     )
     psr.onclick(f"troubadour_button_{id}", continuation)
     if tooltip is not None:
-        psr.add_tooltip(f"troubadour_button_{id}", tooltip)
+        tt_text, recursive_tooltips = make_rich_text(tooltip).render()
+        psr.add_tooltip(f"troubadour_button_{id}", tt_text)
+        for tt_id, tt in recursive_tooltips.items():
+            psr.add_tooltip(tt_id, tt)
 
 
 def add_text_input(
@@ -219,6 +222,7 @@ def add_text_input(
     button_text: str,
     default_value: str = "",
     placeholder_text: str = "",
+    tooltip: Optional[str | RichText] = None,
 ) -> None:
     id = get_id()
     psr.insert_end(
@@ -245,6 +249,12 @@ def add_text_input(
 
     psr.onclick(f"troubadour_inputtext_button_{id}", callback)
 
+    if tooltip is not None:
+        tt_text, recursive_tooltips = make_rich_text(tooltip).render()
+        psr.add_tooltip(f"troubadour_inputtext_button_{id}", tt_text)
+        for tt_id, tt in recursive_tooltips.items():
+            psr.add_tooltip(tt_id, tt)
+
 
 def get_state() -> Optional[GameState]:
     return psr.local_storage(GameState)["state"]
@@ -268,12 +278,14 @@ def render_interface(game: itf.Game, interface: list[itf.Input]) -> None:
                 method=method,
                 default_value=default_value,
                 placeholder_text=placeholder_text,
+                tooltip=tooltip,
             ):
                 add_text_input(
                     lambda v, _m=method: run_page(game, _m, msg=v),  # type:ignore
                     button_text,
                     default_value,
                     placeholder_text,
+                    tooltip,
                 )
             case _:
                 raise NotImplementedError()

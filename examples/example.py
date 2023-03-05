@@ -82,7 +82,11 @@ situation? Are we {}?
         return [
             tbd.Button("Pouac", "pouac"),
             tbd.TextInput(
-                "Send", "pouec", "hello world", "Type some random thing here"
+                "Send",
+                "pouec",
+                "hello world",
+                "Type some random thing here",
+                tooltip=RichText("Information").classes("red"),
             ),
         ]
 

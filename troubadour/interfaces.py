@@ -77,7 +77,7 @@ class Game(Protocol):
 class Button(Input):
     text: str
     method: str
-    tooltip: Optional[str] = None
+    tooltip: Optional[str | RichText] = None
 
 
 @dataclass
@@ -86,6 +86,7 @@ class TextInput(Input):
     method: str
     default_value: str = ""
     placeholder_text: str = ""
+    tooltip: Optional[str | RichText] = None
 
 
 Inputs = list[Input]

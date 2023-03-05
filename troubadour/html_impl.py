@@ -198,6 +198,13 @@ class Story(itf.Story):
         psr.onload(f"troubadour_image_{id}", lambda _: psr.scroll_to_bottom("story"))
 
 
+def add_tooltip(id: str, tooltip: RichText) -> None:
+    tt_text, recursive_tooltips = make_rich_text(tooltip).render()
+    psr.add_tooltip(id, tt_text)
+    for tt_id, tt in recursive_tooltips.items():
+        psr.add_tooltip(tt_id, tt)
+
+
 def add_button(
     text: str, continuation: Callable, tooltip: Optional[str | RichText] = None
 ) -> None:
@@ -211,10 +218,7 @@ def add_button(
     )
     psr.onclick(f"troubadour_button_{id}", continuation)
     if tooltip is not None:
-        tt_text, recursive_tooltips = make_rich_text(tooltip).render()
-        psr.add_tooltip(f"troubadour_button_{id}", tt_text)
-        for tt_id, tt in recursive_tooltips.items():
-            psr.add_tooltip(tt_id, tt)
+        add_tooltip(f"troubadour_button_{id}", make_rich_text(tooltip))
 
 
 def add_text_input(
@@ -250,10 +254,7 @@ def add_text_input(
     psr.onclick(f"troubadour_inputtext_button_{id}", callback)
 
     if tooltip is not None:
-        tt_text, recursive_tooltips = make_rich_text(tooltip).render()
-        psr.add_tooltip(f"troubadour_inputtext_button_{id}", tt_text)
-        for tt_id, tt in recursive_tooltips.items():
-            psr.add_tooltip(tt_id, tt)
+        add_tooltip(f"troubadour_inputtext_button_{id}", make_rich_text(tooltip))
 
 
 def get_state() -> Optional[GameState]:

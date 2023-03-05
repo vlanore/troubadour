@@ -86,3 +86,6 @@ class TextInput(Input):
     method: str
     default_value: str = ""
     placeholder_text: str = ""
+
+
+Inputs = list[Input]

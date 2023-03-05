@@ -10,7 +10,7 @@ class MyGame(tbd.Game):
     # porthole: tbd.ImagePanel = field(default_factory=tbd.ImagePanel)
     info: tbd.InfoPanel = field(default_factory=lambda: tbd.InfoPanel(RichText("")))
 
-    def start(self) -> list[tbd.Input]:
+    def start(self) -> tbd.Inputs:
         # self.porthole.set_url("https://picsum.photos/300/350")
         # self.info.set_title("Informazion")
         self.info.set_text(
@@ -57,14 +57,14 @@ situation? Are we {}?
 
         return [tbd.Button("Click me", "pouac")]
 
-    def pouic(self) -> list[tbd.Input]:
+    def pouic(self) -> tbd.Inputs:
         self.story.newpage()
         self.story.display("Hello")
         self.story.image("https://picsum.photos/800/150", "image")
         self.info.set_title("Informazion")
         return [tbd.Button("Pouac all the way", "pouac")]
 
-    def pouac(self) -> list[tbd.Input]:
+    def pouac(self) -> tbd.Inputs:
         self.porthole = None
         self.story.newpage()
         self.info.set_title(None)
@@ -85,7 +85,7 @@ situation? Are we {}?
             ),
         ]
 
-    def pouec(self, msg: str) -> list[tbd.Input]:
+    def pouec(self, msg: str) -> tbd.Inputs:
         self.porthole = tbd.ImagePanel()
         self.porthole.set_url("https://picsum.photos/300/350")
         self.story.newpage()

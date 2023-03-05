@@ -2,13 +2,14 @@ from dataclasses import dataclass, field
 
 import troubadour as tbd
 from troubadour import RichText
+from troubadour.html_impl import ImagePanel, InfoPanel, Story, run_game
 
 
 @dataclass
 class MyGame(tbd.Game):
-    story: tbd.Story = field(default_factory=tbd.Story)
+    story: Story = field(default_factory=Story)
     # porthole: tbd.ImagePanel = field(default_factory=tbd.ImagePanel)
-    info: tbd.InfoPanel = field(default_factory=lambda: tbd.InfoPanel(RichText("")))
+    info: InfoPanel = field(default_factory=lambda: InfoPanel(RichText("")))
 
     def start(self) -> tbd.Inputs:
         # self.porthole.set_url("https://picsum.photos/300/350")
@@ -86,7 +87,7 @@ situation? Are we {}?
         ]
 
     def pouec(self, msg: str) -> tbd.Inputs:
-        self.porthole = tbd.ImagePanel()
+        self.porthole = ImagePanel()
         self.porthole.set_url("https://picsum.photos/300/350")
         self.story.newpage()
         self.story.display(f"This is the message: {msg}")
@@ -96,4 +97,4 @@ situation? Are we {}?
         ]
 
 
-tbd.run_game(MyGame())
+run_game(MyGame())

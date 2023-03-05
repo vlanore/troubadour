@@ -166,10 +166,6 @@ def render_info(info: Optional[itf.InfoPanel]) -> None:
 class Story(itf.Story):
     history: list[itf.Cmd] = field(default_factory=list)
 
-    # def _scroll_to_bottom(self) -> None:
-    #     tgt = Element("story").element
-    #     tgt.scrollTop = tgt.scrollHeight
-
     def display(self, text: str | RichText) -> None:
         rich_text = make_rich_text(text)
 
@@ -199,6 +195,7 @@ class Story(itf.Story):
                 </div>
             </div>"""
         )
+        psr.onload(f"troubadour_image_{id}", lambda _: psr.scroll_to_bottom("story"))
 
 
 def add_button(

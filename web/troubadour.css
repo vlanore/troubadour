@@ -40,28 +40,12 @@ html {
     width: 100%;
 }
 
-#story-container>.scroll-container {
-    width: 100%;
-    /* flex: 1 0 0px; */
-    margin-bottom: 1em;
-}
-
-#story-container>.scroll-content {
-    width: 100%;
-}
-
-.scroll-container {
-    scroll-snap-type: y mandatory;
-    overflow-y: auto;
-}
-
-.scroll-content {
-    scroll-snap-align: end;
-}
-
 #story {
+    margin-bottom: 1em;
+    flex: 1 0;
     width: 100%;
     padding: 10px;
+    overflow-y: auto;
 }
 
 #story .card figure {
@@ -79,26 +63,26 @@ html {
     margin-bottom: 1em;
 }
 
-#story-container>.scroll-container::-webkit-scrollbar {
+#story::-webkit-scrollbar {
     width: 10px;
     height: 10px;
 }
 
-#story-container>.scroll-container::-webkit-scrollbar-track {
+#story::-webkit-scrollbar-track {
     background: none;
 }
 
-#story-container>.scroll-container::-webkit-scrollbar-thumb {
+#story::-webkit-scrollbar-thumb {
     background: #ddd;
     border-radius: 5px;
     visibility: hidden;
 }
 
-.dark-mode #story-container>.scroll-container::-webkit-scrollbar-thumb {
+.dark-mode #story::-webkit-scrollbar-thumb {
     background: rgb(55, 55, 55);
 }
 
-#story-container>.scroll-container:hover::-webkit-scrollbar-thumb {
+#story:hover::-webkit-scrollbar-thumb {
     visibility: visible;
 }
 

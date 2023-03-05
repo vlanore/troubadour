@@ -13,6 +13,10 @@ def onclick(id: str, func: Callable[[Any], None]) -> None:
     Element(id).element.addEventListener("click", create_proxy(func))
 
 
+def onload(id: str, func: Callable[[Any], None]) -> None:
+    Element(id).element.addEventListener("load", create_proxy(func))
+
+
 def insert_end(id: str, html: str) -> None:
     Element(id).element.insertAdjacentHTML("beforeend", html)
 
@@ -80,6 +84,11 @@ def set_display(id: str, display: str) -> None:
     Element(id).element.style.display = display
 
 
+def scroll_to_bottom(id: str) -> None:
+    tgt = Element(id).element
+    tgt.scrollTop = tgt.scrollHeight
+
+
 T = TypeVar("T")
 
 
@@ -126,6 +135,7 @@ button.download = "{filename}";
 
 def display_story(text: str) -> None:
     psdisplay(HTML(text), target="story")
+    scroll_to_bottom("story")
 
 
 @overload

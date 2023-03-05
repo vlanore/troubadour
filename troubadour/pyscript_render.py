@@ -52,6 +52,7 @@ def add_tooltip(id: str, text: str) -> None:
                     content:`{text}`,
                     allowHTML:true,
                     interactive: true,
+                    appendTo: document.body,
                 }}
             );"""
     )

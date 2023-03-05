@@ -210,6 +210,8 @@ def add_button(
         ),
     )
     psr.onclick(f"troubadour_button_{id}", continuation)
+    if tooltip is not None:
+        psr.add_tooltip(f"troubadour_button_{id}", tooltip)
 
 
 def add_text_input(

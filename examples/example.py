@@ -56,14 +56,14 @@ situation? Are we {}?
 
         self.story.image("https://picsum.photos/800/200", "image")
 
-        return [tbd.Button("Click me", "pouac")]
+        return [tbd.Button("Click me", "pouac", "Ceci n'est pas un pouaque")]
 
     def pouic(self) -> tbd.Inputs:
         self.story.newpage()
         self.story.display("Hello")
         self.story.image("https://picsum.photos/800/150", "image")
         self.info.set_title("Informazion")
-        return [tbd.Button("Pouac all the way", "pouac")]
+        return [tbd.Button("Pouac all the way", "pouac", "Ceci est un pouaque")]
 
     def pouac(self) -> tbd.Inputs:
         self.porthole = None
@@ -92,8 +92,8 @@ situation? Are we {}?
         self.story.newpage()
         self.story.display(f"This is the message: {msg}")
         return [
-            tbd.Button("Pouac", "pouac"),
-            tbd.Button("Pouic", "pouic"),
+            tbd.Button("Pouac", "pouac", "Oh non, pourquoi ?"),
+            tbd.Button("Pouic", "pouic", "Oh non, comment ?"),
         ]
 
 

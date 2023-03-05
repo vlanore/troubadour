@@ -77,7 +77,7 @@ class Game(Protocol):
 class Button(Input):
     text: str
     method: str
-    tooltip: str = ""
+    tooltip: Optional[str] = None
 
 
 @dataclass

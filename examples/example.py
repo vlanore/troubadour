@@ -86,7 +86,7 @@ situation? Are we {}?
                 "pouec",
                 "hello world",
                 "Type some random thing here",
-                tooltip=RichText("Information").classes("red"),
+                tooltip=RichText("Information").classes("red").tooltip("Nested!"),
             ),
         ]
 

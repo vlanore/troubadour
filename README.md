@@ -1,5 +1,6 @@
 # Troubadour
 
+[![pytest](https://github.com/vlanore/troubadour/actions/workflows/pytest.yml/badge.svg)](https://github.com/vlanore/troubadour/actions/workflows/pytest.yml)
 [![mypy](https://github.com/vlanore/troubadour/actions/workflows/mypy.yml/badge.svg)](https://github.com/vlanore/troubadour/actions/workflows/mypy.yml)
 [![flake8](https://github.com/vlanore/troubadour/actions/workflows/flake8.yml/badge.svg)](https://github.com/vlanore/troubadour/actions/workflows/flake8.yml)
 [![pylama](https://github.com/vlanore/troubadour/actions/workflows/pylama.yml/badge.svg)](https://github.com/vlanore/troubadour/actions/workflows/pylama.yml)

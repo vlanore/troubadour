@@ -12,7 +12,7 @@ class MyGame(tbd.Game):
 
     def start(self) -> list[tbd.Input]:
         # self.porthole.set_url("https://picsum.photos/300/350")
-        self.info.set_title("Informazion")
+        # self.info.set_title("Informazion")
         self.info.set_text(
             RichText("str: **{}**\n\nagi: **2**\n\nint: **3**").format(
                 RichText("4").classes("red").tooltip("Strength")
@@ -61,11 +61,13 @@ situation? Are we {}?
         self.story.newpage()
         self.story.display("Hello")
         self.story.image("https://picsum.photos/800/150", "image")
+        self.info.set_title("Informazion")
         return [tbd.Button("Pouac all the way", "pouac")]
 
     def pouac(self) -> list[tbd.Input]:
         self.porthole = None
         self.story.newpage()
+        self.info.set_title(None)
         self.story.display(
             """Quisque nunc tortor, finibus eu gravida quis, tristique at enim.
             Vestibulum imperdiet tempus accumsan. Sed ultricies enim a mattis pretium.

@@ -134,16 +134,16 @@ class GameSaves:
 
 def render_porthole(porthole: Optional[itf.ImagePanel]) -> None:
     if porthole is not None:
-        psr.unhide("porthole-container")
+        psr.set_display("porthole-container", "block")
         psr.set_src("porthole", porthole.get_url())
         psr.set_alt("porthole", porthole.get_alt())
     else:
-        psr.hide("porthole-container")
+        psr.set_display("porthole-container", "none")
 
 
 def render_info(info: Optional[itf.InfoPanel]) -> None:
     if info is not None:
-        psr.unhide("info")
+        psr.set_display("info", "block")
         text, tooltips = info.get_text().render()
         psr.set_html("info-content", text)
 
@@ -152,11 +152,14 @@ def render_info(info: Optional[itf.InfoPanel]) -> None:
             title_text, title_tooltips = title.render()
             psr.set_html("info-title", title_text)
             tooltips |= title_tooltips
+            psr.set_display("info-header", "flex")
+        else:
+            psr.set_display("info-header", "none")
 
         for id, text in tooltips.items():
             psr.add_tooltip(id, text)
     else:
-        psr.hide("info")
+        psr.set_display("info", "none")
 
 
 @dataclass

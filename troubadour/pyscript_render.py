@@ -10,6 +10,12 @@ from pyscript import display as psdisplay  # type: ignore
 
 
 def onclick(id: str, func: Callable[[Any], None]) -> None:
+    """Add on click callback to element.
+
+    Args:
+        id (str): html id of element.
+        func (Callable[[Any], None]): callback.
+    """
     Element(id).element.addEventListener("click", create_proxy(func))
 
 
@@ -95,6 +101,9 @@ T = TypeVar("T")
 
 
 class LocalStorage:
+    """Interface to browser local storage. Provides container-style interface (with
+    square brackets)."""
+
     def __getitem__(self, key: str) -> Optional[str]:
         return js.localStorage.getItem(key)
 
@@ -102,10 +111,21 @@ class LocalStorage:
         js.localStorage.setItem(key, jsp.encode(value))
 
     def __call__(self, cls: Type[T]) -> "TypedLocalStorage[T]":
+        """Helper interface to provided typed access to local storage. Usage is
+        local_storage(cls)[key].
+
+        Args:
+            cls (Type[T]): expected class of stored item.
+
+        Returns:
+            TypedLocalStorage[T]: helper object that provides typed getitem.
+        """
         return TypedLocalStorage(cls)
 
 
 class TypedLocalStorage(Generic[T]):
+    """Helper class that provides typed getitem."""
+
     def __init__(self, cls: Type[T]) -> None:
         self.cls = cls
 
@@ -120,6 +140,7 @@ class TypedLocalStorage(Generic[T]):
 
 
 local_storage = LocalStorage()
+"Global local storage object."
 
 
 def file_download_button(id: str, content: str, filename: str) -> None:

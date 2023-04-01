@@ -54,18 +54,37 @@ class ImagePanel(itf.ImagePanel):
 
 
 class ColorMode(Enum):
+    """Enum that represents the page color mode (light or dark)."""
+
     light = 1
     dark = 2
 
 
 @dataclass
 class GameState:
+    """The game state at a certain point is composed of the game object itself, and of
+    the latest user interface.
+
+    Attributes:
+        game (itf.Game): game object.
+        interface (list[itf.Input]): latest interface (list of inputs).
+    """
+
     game: itf.Game
     interface: list[itf.Input]
 
 
 @dataclass
 class GameSave:
+    """A single game save.
+
+    Attributes:
+        nb (int): save number.
+        name (str): save name.
+        save (GameState): the game state object.
+        date (datetime): save date.
+    """
+
     nb: int
     name: str
     save: GameState
